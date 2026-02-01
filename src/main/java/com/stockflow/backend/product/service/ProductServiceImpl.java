@@ -6,9 +6,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.product.domain.Product;
@@ -23,20 +25,6 @@ public class ProductServiceImpl implements IProductService{
 	
 	@Autowired
 	private IProductRepository repo;
-	
-//	@Override
-//	public Page<ProductDTO> findProducts(String search, Pageable pageable) {
-		// TODO Auto-generated method stub
-//		Page<Product> page;
-//		
-//		if(search == null || search.isBlank()) {
-//			page = repo.findAll(pageable);
-//		}else {
-//			page = repo.findByNameContainingIgnoreCase(search, pageable);
-//		}
-//		
-//		return page.map(Mapper::toDTO);
-//	}
 	
 	@Override
 	public Page<ProductDTO> findProducts(ProductFilter filter, Pageable pageable) {
@@ -53,7 +41,9 @@ public class ProductServiceImpl implements IProductService{
 	            filter.getMinPrice() != null ||
 	            filter.getMaxPrice() != null ||
 	            filter.getMinStock() != null ||
-	            filter.getMaxStock() != null;
+	            filter.getMaxStock() != null ||
+	            filter.getActive() != null ||
+	            filter.getDiscontinuedAt() != null;
 
 	    boolean hasNameSearch = hasText(filter.getName());
 
@@ -73,7 +63,9 @@ public class ProductServiceImpl implements IProductService{
 	                filter.getMinPrice(),
 	                filter.getMaxPrice(),
 	                filter.getMinStock(),
-	                filter.getMaxStock()
+	                filter.getMaxStock(),
+	                filter.getActive(),
+	                filter.getDiscontinuedAt()
 	        );
 	        page = repo.findAll(spec, pageable);
 	    }
@@ -81,14 +73,8 @@ public class ProductServiceImpl implements IProductService{
 	    return page.map(Mapper::toDTO);
 	}
 
-
-	private boolean hasText(String s) {
-	    return s != null && !s.trim().isEmpty();
-	}
-
-
 	@Override
-	public ProductDTO byId(Long id) {
+	public ProductDTO findById(Long id) {
 		// TODO Auto-generated method stub
 		if(id == null) throw new IllegalArgumentException("Product ID is required");
 		
@@ -96,5 +82,88 @@ public class ProductServiceImpl implements IProductService{
 				.map(Mapper::toDTO)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 	}
+
+
+	@Override
+	public ProductDTO createProduct(ProductDTO product) {
+		Product pro = Product.builder()
+				.name(product.getName())
+				.description(product.getDescription())
+				.price(product.getPrice())
+				.sku(product.getSku())
+				.imageUrl(product.getImageUrl())
+				.stock(product.getStock())
+				.build();
+		return Mapper.toDTO(repo.save(pro));
+	}
+	
+	@Transactional
+	@Override
+	public ProductDTO discontinueProduct(Long id) {
+		// TODO Auto-generated method stub
+		Product product = repo.findById(id)
+				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id:" + id));
+		
+		product.setActive(false);
+		product.setDiscontinuedAt(new Date());
+		
+		return Mapper.toDTO(product);
+	}
+	
+	@Transactional
+	@Override
+	public ProductDTO restore(Long id) {
+		// TODO Auto-generated method stub
+		Product product = repo.findById(id)
+				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
+		
+		product.setActive(true);
+		
+		return Mapper.toDTO(product);
+	}
+	
+	@Override
+	public ProductDTO updateProduct(Long id, ProductDTO p) {
+		// TODO Auto-generated method stub
+		Product product = repo.findById(id)
+				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
+		
+		this.applyUpdates(product, p);
+		
+		return Mapper.toDTO(repo.save(product));
+	}
+	
+	private boolean hasText(String s) {
+	    return s != null && !s.trim().isEmpty();
+	}
+	
+	private void applyUpdates(Product product, ProductDTO dto) {
+
+	    if (hasText(dto.getName())) {
+	        product.setName(dto.getName().trim());
+	    }
+	    if (hasText(dto.getDescription())) {
+	        product.setDescription(dto.getDescription().trim());
+	    }
+	    if (dto.getPrice() != null) {
+	        product.setPrice(dto.getPrice());
+	    }
+	    if (hasText(dto.getSku())) {
+	        product.setSku(dto.getSku().trim());
+	    }
+	    if (hasText(dto.getImageUrl())) {
+	        product.setImageUrl(dto.getImageUrl().trim());
+	    }
+	    if (dto.getStock() != null) {
+	        product.setStock(dto.getStock());
+	    }
+	    if (dto.getActive() != null) {
+	        product.setActive(dto.getActive());
+	    }
+	    if (dto.getDiscontinuedAt() != null) {
+	        product.setDiscontinuedAt(dto.getDiscontinuedAt());
+	    }
+	}
+
 
 }

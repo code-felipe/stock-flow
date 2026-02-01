@@ -35,6 +35,12 @@ Example:
 
 ---
 
+## Product CRUD
+
+StockFlow includes Create, Read, Update and Delete process and soft-deletion to keep historical records.
+
+- [Product CRUD module details](docs/product-crud-module.md)
+
 ## Tech Stack
 
 - Java  

@@ -9,8 +9,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -37,7 +39,12 @@ public class ProductDTO {
 
     @Schema(description = "Product stock quantity", example = "25.00")
     private BigDecimal stock;
-
+    
+    @Schema(description = "Enable - Disable for catalog", example = "false")
+    private Boolean active;
+    @Schema(description = "The time when the product was discontinued", example = "2026-01-31T14:16:36Z")
+    private Date discontinuedAt;
+    
     @Schema(description = "Product creation date", example = "2026-01-31T14:16:36Z")
     private Date createdAt;
 }

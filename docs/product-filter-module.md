@@ -32,6 +32,8 @@ GET /api/products
 | maxPrice | Maximum price (<= value) |
 | minStock | Minimum stock (>= value) |
 | maxStock | Maximum stock (<= value) |
+| active | Find all products by boolean |
+| discontinuedAt | Find all products by discontinued date |
 | page | Page index (default: 0) |
 | size | Page size (default: 10) |
 

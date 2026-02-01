@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Predicate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ProductSpecifications {
@@ -20,7 +21,9 @@ public class ProductSpecifications {
             Double minPrice,
             Double maxPrice,
             BigDecimal minStock,
-            BigDecimal maxStock
+            BigDecimal maxStock,
+            Boolean active,
+            Date discontinuedAt
     ) {
         return (root, query, cb) -> {
             List<Predicate> p = new ArrayList<>();
@@ -51,6 +54,15 @@ public class ProductSpecifications {
             }
             if (maxStock != null) {
                 p.add(cb.lessThanOrEqualTo(root.get("stock"), maxStock));
+            }
+            if (active != null) {
+                p.add(cb.equal(root.get("active"), active));
+            } else {
+                p.add(cb.isTrue(root.get("active"))); // default behavior
+            }
+            // optional: discontinuedAt filter
+            if (discontinuedAt != null) {
+                p.add(cb.lessThanOrEqualTo(root.get("discontinuedAt"), discontinuedAt));
             }
 
             return cb.and(p.toArray(new Predicate[0]));

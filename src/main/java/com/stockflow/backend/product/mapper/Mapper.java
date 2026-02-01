@@ -14,6 +14,8 @@ public class Mapper {
 				.price(product.getPrice())
 				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
+				.active(product.getActive())
+				.discontinuedAt(product.getDiscontinuedAt())
 				.stock(product.getStock())
 				.createdAt(product.getCreatedAt())
 				.build();

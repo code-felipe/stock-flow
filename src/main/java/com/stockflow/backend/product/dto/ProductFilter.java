@@ -1,6 +1,7 @@
 package com.stockflow.backend.product.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -29,4 +30,12 @@ public class ProductFilter {
 
     @Schema(description = "Maximum stock", example = "100")
     private BigDecimal maxStock;
+    
+    @Schema(description = "Enable - Disable product activity", example = "true")
+    private Boolean active;
+    
+    @Schema(description = "The product discontinuity is tracked automatically", example = "2026-01-31T14:16:36Z")
+    private Date discontinuedAt;
+    
+    
 }
