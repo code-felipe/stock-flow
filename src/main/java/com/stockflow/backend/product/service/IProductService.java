@@ -1,0 +1,19 @@
+package com.stockflow.backend.product.service;
+
+import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
+
+import org.springframework.data.domain.Page;
+
+
+import com.stockflow.backend.product.dto.ProductDTO;
+import com.stockflow.backend.product.dto.ProductFilter;
+
+public interface IProductService {
+	
+//	public Page<ProductDTO> findProducts(String search, Pageable pageable);
+	public Page<ProductDTO> findProducts(ProductFilter filter, Pageable pageable);
+	public ProductDTO byId(Long id);
+
+}
