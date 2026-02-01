@@ -20,12 +20,6 @@ It is designed to support scalable catalog browsing similar to modern e-commerce
 ## Endpoint
 GET /api/products
 
-
----
-
-## Supported Query Parameters
-
-
 ---
 
 ## Supported Query Parameters
@@ -87,11 +81,11 @@ Possible extensions:
 
 The Product Filtering Module provides:
 
-✔ Dynamic filtering  
-✔ Pagination  
-✔ Scalable design  
-✔ Clean architecture  
-✔ REST best practices
-✔ Real-world applicability  
+- Dynamic filtering  
+- Pagination  
+- Scalable design  
+- Clean architecture  
+- REST best practices
+- Real-world applicability  
 
 ---
