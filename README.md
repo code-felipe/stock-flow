@@ -37,7 +37,8 @@ Example:
 - Spring Boot  
 - Spring Data JPA  
 - MySQL / SQL Database  
-- Maven  
+- Maven
+- Swagger  
 
 ---
 
