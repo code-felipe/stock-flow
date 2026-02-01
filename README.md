@@ -16,6 +16,10 @@ It allows clients to create, retrieve, update, and manage products in a scalable
 
 ---
 
+## UML - Domain Model
+![UML diagram](docs/diagrams/uml-image.png)
+
+
 ## Product Filtering
 
 StockFlow includes a dynamic filtering module that supports:
