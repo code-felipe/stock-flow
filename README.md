@@ -26,7 +26,8 @@ StockFlow includes a dynamic filtering module that supports:
 - Pagination for large catalogs
 
 Example:
-**GET /api/products?name=ring&minPrice=10&maxPrice=50&page=0&size=10**
+**GET** /api/products?name=ring&minPrice=10&maxPrice=50&page=0&size=10
+- [Product filtering module details](docs/product-filter-module.md)
 
 ---
 

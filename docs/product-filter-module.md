@@ -91,7 +91,7 @@ The Product Filtering Module provides:
 ✔ Pagination  
 ✔ Scalable design  
 ✔ Clean architecture  
-✔ REST best practices  
+✔ REST best practices
 ✔ Real-world applicability  
 
 ---
