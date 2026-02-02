@@ -29,12 +29,17 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false)
 	private String name;
+	@Column(nullable = false)
 	private String description;
+	@Column(nullable = false)
 	private Double price;
+	@Column(nullable = false, unique = true)
 	private String sku;
 	@Column(name = "image_url")
 	private String imageUrl;
+	@Column(nullable = false)
 	private BigDecimal stock;
 	@Column(nullable = false)
 	private Boolean active = true;

@@ -93,6 +93,7 @@ public class ProductServiceImpl implements IProductService{
 				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
 				.stock(product.getStock())
+				.active(true)
 				.build();
 		return Mapper.toDTO(repo.save(pro));
 	}

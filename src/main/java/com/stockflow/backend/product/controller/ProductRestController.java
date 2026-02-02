@@ -7,7 +7,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,23 +66,34 @@ public class ProductRestController {
             summary = "Get product by id",
             description = "Find a product by its id."
     )
-    public ResponseEntity<ProductDTO> byId(
+    public ResponseEntity<Map<String, Object>> byId(
             @Parameter(description = "Product id", example = "1")
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(service.findById(id));
+    	ProductDTO product = service.findById(id);
+    	
+    	  Map<String, Object> body = new HashMap<>();
+          body.put("message", "Product founded successfully");
+          body.put("product", product);
+          
+        return ResponseEntity.ok().body(body);
     }
     
     @PostMapping
-    @Operation(
-            summary = "Create product",
-            description = "Create a new product"
-    )
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO dto){
-    	ProductDTO product = service.createProduct(dto);
-    	
-    	return ResponseEntity.created(URI.create("/api/products"+product.getId())).body(product);
+    @Operation(summary = "Create product", description = "Create a new product")
+    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductDTO dto) {
+
+        ProductDTO product = service.createProduct(dto);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Product created successfully");
+        body.put("product", product);
+
+        return ResponseEntity
+                .created(URI.create("/api/products/" + product.getId()))
+                .body(body);
     }
+
     
     // Soft-deletion
     @PatchMapping("/{id}/discontinue")
@@ -86,9 +101,16 @@ public class ProductRestController {
             summary = "Discontinue product",
             description = "Discontinue a product from its id"
     )
-    public ResponseEntity<ProductDTO> discontinue(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> discontinue(@PathVariable Long id) {
+    	
         ProductDTO updated = service.discontinueProduct(id);
-        return ResponseEntity.ok(updated);
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Product have been discontinued successfully");
+        body.put("product", updated);
+        
+        
+        return ResponseEntity.ok().body(body);
     }
     
     // Restauration
@@ -97,9 +119,14 @@ public class ProductRestController {
             summary = "Restore product",
             description = "Restore a product from its id"
     )
-    public ResponseEntity<ProductDTO> restore(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> restore(@PathVariable Long id) {
         ProductDTO updated = service.restore(id);
-        return ResponseEntity.ok(updated);
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Product have been restored successfully");
+        body.put("product", updated);
+        
+        return ResponseEntity.ok().body(body);
     }
     
     @PutMapping("/{id}")
@@ -107,37 +134,19 @@ public class ProductRestController {
             summary = "Edit product",
             description = "Edit a product from its id"
     )
-    public ResponseEntity<ProductDTO> updateProduct(
+    public ResponseEntity<Map<String, Object>> updateProduct(
     		@PathVariable Long id,
     		@RequestBody ProductDTO dto) {
     	
-        return ResponseEntity.ok(service.updateProduct(id, dto));
+    	ProductDTO updated = service.updateProduct(id, dto);
+    	
+    	 Map<String, Object> body = new HashMap<>();
+         body.put("message", "Product have been updated successfully");
+         body.put("product", updated);
+         
+         return ResponseEntity.ok().body(body);
     }
 
 }
-    
-    
-    
-    //=== Old findProducts version without filter ===
-//    @GetMapping
-//    @Operation(
-//            summary = "Get products",
-//            description = "Paginated product list with optional name search; sorted by createdAt (desc)."
-//    )
-//    public ResponseEntity<Page<ProductDTO>> list(
-//            @Parameter(description = "Optional search by product name", example = "ring")
-//            @RequestParam(required = false) String search,
-//
-//            @Parameter(description = "Zero-based page index", example = "0")
-//            @RequestParam(defaultValue = "0") int page,
-//
-//            @Parameter(description = "Page size", example = "10")
-//            @RequestParam(defaultValue = "10") int size
-//    ) {
-    	
-//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-//        Page<ProductDTO> result = service.findProducts(search, pageable);
-//        return ResponseEntity.ok(result);
-//    }
 
 
