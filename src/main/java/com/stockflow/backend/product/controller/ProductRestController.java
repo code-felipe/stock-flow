@@ -1,7 +1,12 @@
 package com.stockflow.backend.product.controller;
 
+import com.stockflow.backend.category.service.ICategoryService;
 import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
+import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
+import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.product.service.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,17 +41,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductRestController {
 
     @Autowired
-    private IProductService service;
+    private IProductService productService;
+    
+    @Autowired
+    private ICategoryService categoryService;
+    
 
     @GetMapping
     @Operation(
             summary = "Get products",
             description = "Paginated product list with optional name search; sorted by createdAt (desc)."
     )
-    public ResponseEntity<Page<ProductDTO>> list(
+    public ResponseEntity<Page<ProductSummaryDTO>> list(
     		@ModelAttribute ProductFilter filter,
-            @Parameter(description = "Optional search by product name", example = "ring")
+            @Parameter(description = "Global search box (free-text). By default, it searches product name (case-insensitive, partial match). If 'name' is provided in ProductFilter, it takes precedence.", example = "ring")
             @RequestParam(required = false) String search,
+            
+            @Parameter(description = "Optional search by product category name", example = "Rings")
+            @RequestParam(required = false) String category,
 
             @Parameter(description = "Zero-based page index", example = "0")
             @RequestParam(defaultValue = "0") int page,
@@ -56,8 +68,21 @@ public class ProductRestController {
     ) {
     	
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<ProductDTO> result = service.findProducts(filter, pageable);
-        return ResponseEntity.ok(result);
+        
+        if (search != null && !search.isBlank() && (filter.getName() == null || filter.getName().isBlank())) {
+            filter.setName(search);
+        }
+        Page<ProductSummaryDTO> result;
+        if (category != null && !category.isBlank()) {
+            result = categoryService.findProductsByCategoryNameIgnoreCase(category, pageable);
+        } else {
+            result = productService.findProducts(filter, pageable);
+        }
+
+        return ResponseEntity.ok()
+            .header("X-Fields-Excluded", "categoryIds")
+            .header("X-Note", "Products have categories, but categoryIds are not returned by this endpoint. Use /api/products/{id} for details.")
+            .body(result);
     }
     
     
@@ -70,7 +95,7 @@ public class ProductRestController {
             @Parameter(description = "Product id", example = "1")
             @PathVariable Long id
     ) {
-    	ProductDTO product = service.findById(id);
+    	ProductDetailDTO product = productService.findById(id);
     	
     	  Map<String, Object> body = new HashMap<>();
           body.put("message", "Product founded successfully");
@@ -81,9 +106,9 @@ public class ProductRestController {
     
     @PostMapping
     @Operation(summary = "Create product", description = "Create a new product")
-    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductDTO dto) {
+    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductCreateResponseDTO dto) {
 
-        ProductDTO product = service.createProduct(dto);
+    	ProductCreateResponseDTO product = productService.createProduct(dto);
 
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Product created successfully");
@@ -103,7 +128,7 @@ public class ProductRestController {
     )
     public ResponseEntity<Map<String, Object>> discontinue(@PathVariable Long id) {
     	
-        ProductDTO updated = service.discontinueProduct(id);
+    	ProductUpdateResponseDTO updated = productService.discontinueProduct(id);
         
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Product have been discontinued successfully");
@@ -120,7 +145,7 @@ public class ProductRestController {
             description = "Restore a product from its id"
     )
     public ResponseEntity<Map<String, Object>> restore(@PathVariable Long id) {
-        ProductDTO updated = service.restore(id);
+    	ProductUpdateResponseDTO updated = productService.restore(id);
         
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Product have been restored successfully");
@@ -136,9 +161,9 @@ public class ProductRestController {
     )
     public ResponseEntity<Map<String, Object>> updateProduct(
     		@PathVariable Long id,
-    		@RequestBody ProductDTO dto) {
+    		@Valid @RequestBody ProductUpdateResponseDTO dto) {
     	
-    	ProductDTO updated = service.updateProduct(id, dto);
+    	ProductUpdateResponseDTO updated = productService.updateProduct(id, dto);
     	
     	 Map<String, Object> body = new HashMap<>();
          body.put("message", "Product have been updated successfully");

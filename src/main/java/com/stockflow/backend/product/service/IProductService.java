@@ -1,21 +1,25 @@
 package com.stockflow.backend.product.service;
 
 import org.springframework.data.domain.Pageable;
-
-
 import org.springframework.data.domain.Page;
-
 
 import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
+import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
+import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
+
 
 public interface IProductService {
 	
-	public Page<ProductDTO> findProducts(ProductFilter filter, Pageable pageable);
-	public ProductDTO findById(Long id);
-	public ProductDTO createProduct(ProductDTO product);
-	public ProductDTO discontinueProduct(Long id); 
-	public ProductDTO restore(Long id);
-	public ProductDTO updateProduct(Long id, ProductDTO product);
+	//Summary DTO
+	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable);
+	//Detail DTO + cardinalities(category)
+	public ProductDetailDTO findById(Long id);
+	public ProductCreateResponseDTO createProduct(ProductCreateResponseDTO product);
+	public ProductUpdateResponseDTO discontinueProduct(Long id); 
+	public ProductUpdateResponseDTO restore(Long id);
+	public ProductUpdateResponseDTO updateProduct(Long id, ProductUpdateResponseDTO product);
 
 }

@@ -1,4 +1,4 @@
-package com.stockflow.backend.product.dto;
+package com.stockflow.backend.product.dto.summary;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,8 +21,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "ProductDTO", description = "DTO that represents a product")
-public class ProductDTO {
+@Schema(name = "ProductSummaryDTO", description = "DTO that represents only the product")
+public class ProductSummaryDTO {
 
     @Schema(description = "Product id", example = "1")
     private Long id;
@@ -60,9 +60,5 @@ public class ProductDTO {
     
     @Schema(description = "Product creation date", example = "2026-01-31T14:16:36Z")
     private Date createdAt;
-    
-    @NotEmpty(message = "At least one category is required")
-    private Set<Long> categoryIds;
-
 }
 

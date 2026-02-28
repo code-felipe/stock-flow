@@ -22,7 +22,7 @@ It provides a structured backend service that supports product lifecycle managem
 
 The domain model is designed to reflect a realistic catalog/inventory structure and maintain separation between persistence and API layers.
 
-![UML diagram](docs/diagrams/uml-image.png)
+![UML diagram](docs/diagrams/uml-diagram.svg)
 
 
 ## Product Filtering

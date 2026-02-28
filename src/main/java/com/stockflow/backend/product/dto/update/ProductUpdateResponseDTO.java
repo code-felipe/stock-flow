@@ -1,4 +1,4 @@
-package com.stockflow.backend.product.dto;
+package com.stockflow.backend.product.dto.update;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,8 +21,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "ProductDTO", description = "DTO that represents a product")
-public class ProductDTO {
+@Schema(name = "ProductUpdateRequestDTO", description = "DTO that represents a product and its objects related on update")
+public class ProductUpdateResponseDTO {
 
     @Schema(description = "Product id", example = "1")
     private Long id;

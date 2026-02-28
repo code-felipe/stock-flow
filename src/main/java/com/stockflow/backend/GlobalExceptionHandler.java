@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 
 import java.time.Instant;
@@ -94,6 +95,17 @@ public class GlobalExceptionHandler {
                 "error", "Bad Request",
                 "message", "Database constraint violation",
                 "detail", detail
+        ));
+    }
+    
+    // works on categori, when name is duplicate.
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicate(DuplicateResourceException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "timestamp", Instant.now().toString(),
+                "status", 409,
+                "error", "Conflict",
+                "message", ex.getMessage()
         ));
     }
 }

@@ -7,18 +7,28 @@ import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.stockflow.backend.category.domain.Category;
+import com.stockflow.backend.category.repository.ICategoryRepository;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
-import com.stockflow.backend.product.mapper.Mapper;
+import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
+import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
+import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
 import com.stockflow.backend.product.spec.ProductSpecifications;
+import com.stockflow.backend.utils.mapper.Mapper;
 
 @Service
 public class ProductServiceImpl implements IProductService{
@@ -26,11 +36,14 @@ public class ProductServiceImpl implements IProductService{
 	@Autowired
 	private IProductRepository repo;
 	
+	@Autowired
+	private ICategoryRepository catRepo;
+	
 	@Override
-	public Page<ProductDTO> findProducts(ProductFilter filter, Pageable pageable) {
+	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable) {
 
 	    if (filter == null) {
-	        return repo.findAll(pageable).map(Mapper::toDTO);
+	        return repo.findAll(pageable).map(Mapper::toSummaryDTO);
 	    }
 
 	    Page<Product> page;
@@ -55,7 +68,7 @@ public class ProductServiceImpl implements IProductService{
 	            page = repo.findByNameContainingIgnoreCase(filter.getName().trim(), pageable);
 	        }
 	    } else {
-	        // name search + filtros
+	        // name search + filters
 	        Specification<Product> spec = ProductSpecifications.withFilters(
 	                filter.getName(),
 	                filter.getId(),
@@ -70,22 +83,28 @@ public class ProductServiceImpl implements IProductService{
 	        page = repo.findAll(spec, pageable);
 	    }
 
-	    return page.map(Mapper::toDTO);
+	    return page.map(Mapper::toSummaryDTO);
 	}
 
 	@Override
-	public ProductDTO findById(Long id) {
+	public ProductDetailDTO findById(Long id) {
 		// TODO Auto-generated method stub
 		if(id == null) throw new IllegalArgumentException("Product ID is required");
 		
 		return repo.findById(id)
-				.map(Mapper::toDTO)
+				.map(Mapper::toDetailDTO)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 	}
 
 
 	@Override
-	public ProductDTO createProduct(ProductDTO product) {
+	public ProductCreateResponseDTO createProduct(ProductCreateResponseDTO product) {
+		List<Category> found = catRepo.findAllById(product.getCategoryIds());
+		
+		  if (found.size() != product.getCategoryIds().size()) {
+		        throw new ResourceNotFoundException("One or more categoryIds do not exist.");
+		    }
+		  
 		Product pro = Product.builder()
 				.name(product.getName())
 				.description(product.getDescription())
@@ -94,13 +113,14 @@ public class ProductServiceImpl implements IProductService{
 				.imageUrl(product.getImageUrl())
 				.stock(product.getStock())
 				.active(true)
+				.categories(new HashSet<>(found))
 				.build();
-		return Mapper.toDTO(repo.save(pro));
+		return Mapper.toCreateDTO(repo.save(pro));
 	}
 	
 	@Transactional
 	@Override
-	public ProductDTO discontinueProduct(Long id) {
+	public ProductUpdateResponseDTO discontinueProduct(Long id) {
 		// TODO Auto-generated method stub
 		Product product = repo.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id:" + id));
@@ -108,38 +128,36 @@ public class ProductServiceImpl implements IProductService{
 		product.setActive(false);
 		product.setDiscontinuedAt(new Date());
 		
-		return Mapper.toDTO(product);
+		return Mapper.toUpdateDTO(product);
 	}
 	
 	@Transactional
 	@Override
-	public ProductDTO restore(Long id) {
+	public ProductUpdateResponseDTO restore(Long id) {
 		// TODO Auto-generated method stub
 		Product product = repo.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
 		
 		product.setActive(true);
 		
-		return Mapper.toDTO(product);
+		return Mapper.toUpdateDTO(product);
 	}
 	
 	@Override
-	public ProductDTO updateProduct(Long id, ProductDTO p) {
+	public ProductUpdateResponseDTO updateProduct(Long id, ProductUpdateResponseDTO p) {
 		// TODO Auto-generated method stub
 		Product product = repo.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
 		
 		this.applyUpdates(product, p);
 		
-		return Mapper.toDTO(repo.save(product));
+		return Mapper.toUpdateDTO(repo.save(product));
 	}
 	
-	private boolean hasText(String s) {
-	    return s != null && !s.trim().isEmpty();
-	}
 	
-	private void applyUpdates(Product product, ProductDTO dto) {
+	private void applyUpdates(Product product, ProductUpdateResponseDTO dto) {
 
+		
 	    if (hasText(dto.getName())) {
 	        product.setName(dto.getName().trim());
 	    }
@@ -150,8 +168,16 @@ public class ProductServiceImpl implements IProductService{
 	        product.setPrice(dto.getPrice());
 	    }
 	    if (hasText(dto.getSku())) {
-	        product.setSku(dto.getSku().trim());
+	        String newSku = dto.getSku().trim();
+	        if(!newSku.equals(product.getSku())) {
+	        	if(repo.existsBySkuAndIdNot(newSku, product.getId())) {
+	        		 throw new IllegalArgumentException("SKU already in use: " + newSku);
+	        	}
+	        	product.setSku(newSku);
+	        }
+	        
 	    }
+	    
 	    if (hasText(dto.getImageUrl())) {
 	        product.setImageUrl(dto.getImageUrl().trim());
 	    }
@@ -164,7 +190,33 @@ public class ProductServiceImpl implements IProductService{
 	    if (dto.getDiscontinuedAt() != null) {
 	        product.setDiscontinuedAt(dto.getDiscontinuedAt());
 	    }
-	}
+	    
+	    // Bring all cat ids - no duplicates.
+	    Set<Long> ids = dto.getCategoryIds();
+	    
+	    // Get all categories 
+	    List<Category> cats = catRepo.findAllById(ids);
+	    
+	    if (cats.size() != ids.size()) {
+	        Set<Long> foundIds = cats.stream()
+	                .map(Category::getId)
+	                .collect(Collectors.toSet());
 
+	        Set<Long> missing = ids.stream()
+	                .filter(id -> !foundIds.contains(id))
+	                .collect(Collectors.toSet());
+
+	        throw new ResourceNotFoundException("Category not found: " + missing);
+	    }
+	    
+	    product.getCategories().clear();
+	    product.getCategories().addAll(cats);
+	    
+	    
+	}
+	
+	private boolean hasText(String s) {
+	    return s != null && !s.trim().isEmpty();
+	}
 
 }
