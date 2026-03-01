@@ -14,7 +14,6 @@ import com.stockflow.backend.category.repository.ICategoryRepository;
 import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.product.domain.Product;
-import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
 import com.stockflow.backend.utils.mapper.Mapper;

@@ -1,7 +1,6 @@
 package com.stockflow.backend.product.controller;
 
 import com.stockflow.backend.category.service.ICategoryService;
-import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;

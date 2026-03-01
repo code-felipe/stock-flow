@@ -3,7 +3,6 @@ package com.stockflow.backend.product.service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
-import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;

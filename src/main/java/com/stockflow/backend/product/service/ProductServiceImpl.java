@@ -20,7 +20,6 @@ import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.category.repository.ICategoryRepository;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.product.domain.Product;
-import com.stockflow.backend.product.dto.ProductDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
