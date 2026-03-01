@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,10 +21,10 @@ public class ProductSpecifications {
             String sku,
             Double minPrice,
             Double maxPrice,
-            BigDecimal minStock,
-            BigDecimal maxStock,
+            Integer minStock,
+            Integer maxStock,
             Boolean active,
-            Date discontinuedAt
+            Instant discontinuedAt
     ) {
         return (root, query, cb) -> {
             List<Predicate> p = new ArrayList<>();

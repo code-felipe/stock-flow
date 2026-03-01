@@ -6,6 +6,9 @@ public interface ProductStockView {
 	
 	Long getProductId();
     String getProductName();
+    String getProductDescription();
+    Double getProductPrice();
+    String getProductImageUrl();
     String getProductSku();
     Integer getOnHand();
     Integer getReserved();

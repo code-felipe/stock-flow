@@ -1,6 +1,7 @@
 package com.stockflow.backend.product.dto;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,16 +27,19 @@ public class ProductFilter {
     private Double maxPrice;
 
     @Schema(description = "Minimum stock", example = "1")
-    private BigDecimal minStock;
+    private Integer minStock;
 
     @Schema(description = "Maximum stock", example = "100")
-    private BigDecimal maxStock;
+    private Integer maxStock;
     
     @Schema(description = "Enable - Disable product activity", example = "true")
     private Boolean active;
     
     @Schema(description = "The product discontinuity is tracked automatically", example = "2026-01-31T14:16:36Z")
-    private Date discontinuedAt;
+    private Instant discontinuedAt;
+    
+    @Schema(description = "Filter by category name (exact match, ignore case)", example = "Rings")
+    private String category;
     
     
 }

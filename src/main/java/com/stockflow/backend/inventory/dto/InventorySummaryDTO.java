@@ -29,6 +29,18 @@ public class InventorySummaryDTO {
 	@NotBlank(message = "Name is required")
 	private String productName;
 	
+	@Schema(description = "Product description", example = "Ring gold for wedding")
+	@NotBlank(message = "Description is required")
+	private String productDescription;
+	
+	@Schema(description = "Product price", example = "$300")
+	@NotBlank(message = "Price is required")
+	private Double productPrice;
+	
+	@Schema(description = "Product image representation url", example = "https://example.com/images/gold-ring.jpg")
+    @NotBlank(message = "Image is required")
+    private String productImageUrl;
+	
 	@Schema(description = "Product sku", example = "HUJ-898-18")
 	@NotBlank(message = "Sku is required")
 	private String productSku;
