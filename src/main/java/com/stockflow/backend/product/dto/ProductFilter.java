@@ -27,10 +27,10 @@ public class ProductFilter {
     private Double maxPrice;
 
     @Schema(description = "Minimum stock", example = "1")
-    private Integer minStock;
+    private BigDecimal minStock;
 
     @Schema(description = "Maximum stock", example = "100")
-    private Integer maxStock;
+    private BigDecimal maxStock;
     
     @Schema(description = "Enable - Disable product activity", example = "true")
     private Boolean active;

@@ -1,6 +1,7 @@
 package com.stockflow.backend.product.service;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 
 import com.stockflow.backend.product.dto.ProductFilter;
@@ -14,7 +15,7 @@ public interface IProductService {
 	
 	//Summary DTO
 	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable);
-	//Detail DTO + cardinalities(category)
+	//Summary DTO with Specification	//Detail DTO + cardinalities(category)
 	public ProductDetailDTO findById(Long id);
 	public ProductCreateResponseDTO createProduct(ProductCreateResponseDTO product);
 	public ProductUpdateResponseDTO discontinueProduct(Long id); 

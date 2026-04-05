@@ -26,6 +26,7 @@ import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
+import com.stockflow.backend.product.repository.specification.ProductSpecification;
 import com.stockflow.backend.product.spec.ProductSpecifications;
 import com.stockflow.backend.utils.mapper.Mapper;
 
@@ -37,53 +38,72 @@ public class ProductServiceImpl implements IProductService{
 	
 	@Autowired
 	private ICategoryRepository catRepo;
-	
+//	
+//	@Override
+//	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable) {
+//
+//	    if (filter == null) {
+//	        return repo.findAll(pageable).map(Mapper::toSummaryDTO);
+//	    }
+//
+//	    Page<Product> page;
+//
+//	    boolean hasExtraFilters =
+//	            filter.getId() != null ||
+//	            hasText(filter.getSku()) ||
+//	            filter.getMinPrice() != null ||
+//	            filter.getMaxPrice() != null ||
+//	            filter.getMinStock() != null ||
+//	            filter.getMaxStock() != null ||
+//	            filter.getActive() != null ||
+//	            filter.getDiscontinuedAt() != null;
+//
+//	    boolean hasNameSearch = hasText(filter.getName());
+//
+//	    if (!hasExtraFilters) {
+//	        // solo name search o nada
+//	        if (!hasNameSearch) {
+//	            page = repo.findAll(pageable);
+//	        } else {
+//	            page = repo.findByNameContainingIgnoreCase(filter.getName().trim(), pageable);
+//	        }
+//	    } else {
+//	        // name search + filters
+//	        Specification<Product> spec = ProductSpecifications.withFilters(
+//	                filter.getName(),
+//	                filter.getId(),
+//	                filter.getSku(),
+//	                filter.getMinPrice(),
+//	                filter.getMaxPrice(),
+//	                filter.getMinStock(),
+//	                filter.getMaxStock(),
+//	                filter.getActive(),
+//	                filter.getDiscontinuedAt()
+//	        );
+//	        page = repo.findAll(spec, pageable);
+//	    }
+//
+//	    return page.map(Mapper::toSummaryDTO);
+//	}
 	@Override
 	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable) {
 
-	    if (filter == null) {
-	        return repo.findAll(pageable).map(Mapper::toSummaryDTO);
-	    }
-
-	    Page<Product> page;
-
-	    boolean hasExtraFilters =
-	            filter.getId() != null ||
-	            hasText(filter.getSku()) ||
-	            filter.getMinPrice() != null ||
-	            filter.getMaxPrice() != null ||
-	            filter.getMinStock() != null ||
-	            filter.getMaxStock() != null ||
-	            filter.getActive() != null ||
-	            filter.getDiscontinuedAt() != null;
-
-	    boolean hasNameSearch = hasText(filter.getName());
-
-	    if (!hasExtraFilters) {
-	        // solo name search o nada
-	        if (!hasNameSearch) {
-	            page = repo.findAll(pageable);
-	        } else {
-	            page = repo.findByNameContainingIgnoreCase(filter.getName().trim(), pageable);
-	        }
-	    } else {
-	        // name search + filters
-	        Specification<Product> spec = ProductSpecifications.withFilters(
-	                filter.getName(),
-	                filter.getId(),
-	                filter.getSku(),
-	                filter.getMinPrice(),
-	                filter.getMaxPrice(),
-	                filter.getMinStock(),
-	                filter.getMaxStock(),
-	                filter.getActive(),
-	                filter.getDiscontinuedAt()
-	        );
-	        page = repo.findAll(spec, pageable);
-	    }
-
-	    return page.map(Mapper::toSummaryDTO);
+		Specification<Product> spec =
+                Specification.where(ProductSpecification.nameContains(filter.getName()))
+                        .and(ProductSpecification.hasId(filter.getId()))
+                        .and(ProductSpecification.hasSku(filter.getSku()))
+                        .and(ProductSpecification.minPrice(filter.getMinPrice()))
+                        .and(ProductSpecification.maxPrice(filter.getMaxPrice()))
+                        .and(ProductSpecification.minStock(filter.getMinStock()))
+                        .and(ProductSpecification.maxStock(filter.getMaxStock()))
+                        .and(ProductSpecification.isActive(filter.getActive()))
+                        .and(ProductSpecification.discontinuedBefore(filter.getDiscontinuedAt()))
+						.and(ProductSpecification.hasCategory(filter.getCategory()));
+		Page<Product> page = repo.findAll(spec, pageable);
+		
+		return page.map(Mapper::toSummaryDTO);
 	}
+	
 
 	@Override
 	public ProductDetailDTO findById(Long id) {
@@ -217,5 +237,7 @@ public class ProductServiceImpl implements IProductService{
 	private boolean hasText(String s) {
 	    return s != null && !s.trim().isEmpty();
 	}
+
+	
 
 }

@@ -21,8 +21,8 @@ public class ProductSpecifications {
             String sku,
             Double minPrice,
             Double maxPrice,
-            Integer minStock,
-            Integer maxStock,
+            BigDecimal minStock,
+            BigDecimal maxStock,
             Boolean active,
             Instant discontinuedAt
     ) {
@@ -49,13 +49,14 @@ public class ProductSpecifications {
             if (maxPrice != null) {
                 p.add(cb.lessThanOrEqualTo(root.get("price"), maxPrice));
             }
-
+            
             if (minStock != null) {
                 p.add(cb.greaterThanOrEqualTo(root.get("stock"), minStock));
             }
             if (maxStock != null) {
                 p.add(cb.lessThanOrEqualTo(root.get("stock"), maxStock));
             }
+            
             if (active != null) {
                 p.add(cb.equal(root.get("active"), active));
             } else {

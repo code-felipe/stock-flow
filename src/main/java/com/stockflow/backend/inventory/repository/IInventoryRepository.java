@@ -1,5 +1,6 @@
 package com.stockflow.backend.inventory.repository;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -85,8 +86,8 @@ public interface IInventoryRepository extends JpaRepository<Inventory, Inventory
 			  @Param("sku") String sku,
 			  @Param("minPrice") Double minPrice,
 			  @Param("maxPrice") Double maxPrice,
-			  @Param("minStock") Integer minStock,
-			  @Param("maxStock") Integer maxStock,
+			  @Param("minStock") BigDecimal minStock,
+			  @Param("maxStock") BigDecimal maxStock,
 			  @Param("active") Boolean active,
 			  @Param("discontinuedAt") Instant discontinuedAt,
 			  @Param("category") String category,
@@ -113,7 +114,7 @@ public interface IInventoryRepository extends JpaRepository<Inventory, Inventory
 		    """, nativeQuery = true)
 		Page<ProductStockView> findProductStockByStore(@Param("storeId") Long storeId, Pageable pageable);
  	
- 	
+ 	// it's replaced by the filter method.
 	@Query(
 			  value = """
 			    SELECT

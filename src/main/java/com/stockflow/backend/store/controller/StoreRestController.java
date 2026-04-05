@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.utils.mapper.Mapper;
 
@@ -35,22 +36,33 @@ public class StoreRestController {
 
 	
 	@GetMapping("/{storeId}/stock")
-	public ResponseEntity<Page<InventorySummaryDTO>> listStock(
+	public ResponseEntity<Page<ProductStockDTO>> listStock(
 	        @PathVariable Long storeId,
 	        @ModelAttribute ProductFilter filter,
 	        @RequestParam(required = false) String search,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size
 	) {
-	    Pageable pageable = PageRequest.of(page, size);
+		// uses native query and uses ProductSummaryDTO
+//	    Pageable pageable = PageRequest.of(page, size);
+//
+//	    if (hasText(search) && !hasText(filter.getName())) {
+//	        filter.setName(search);
+//	    }
+//
+//	    Page<ProductStockView> pg = inventoryService.findProducts(filter, storeId, pageable);
+//	    return ResponseEntity.ok(pg.map(Mapper::toSummaryDTO));
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-	    if (hasText(search) && !hasText(filter.getName())) {
-	        filter.setName(search);
-	    }
+        if (hasText(search) && !hasText(filter.getName())) {
+            filter.setName(search);
+        }
 
-	    Page<ProductStockView> pg = inventoryService.findProducts(filter, storeId, pageable);
-	    return ResponseEntity.ok(pg.map(Mapper::toSummaryDTO));
-	}
+        Page<ProductStockDTO> result = inventoryService.findStockByStore(storeId, filter, pageable);
+        return ResponseEntity.ok(result);
+    }
+
+	
 	
 	private boolean hasText(String s) {
 	    return s != null && !s.trim().isEmpty();

@@ -9,6 +9,7 @@ import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
+import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
@@ -30,6 +31,25 @@ public class Mapper {
 				.discontinuedAt(product.getDiscontinuedAt())
 				.stock(product.getStock())
 				.createdAt(product.getCreatedAt())
+				.build();
+	}
+	
+	public static ProductStockDTO toSummaryDTO(Product product, Inventory inv) {
+		
+		return ProductStockDTO.builder()
+				.productId(product.getId())
+				.productName(product.getName())
+				.productDescription(product.getDescription())
+				.productPrice(product.getPrice())
+				.productSku(product.getSku())
+				.productImageUrl(product.getImageUrl())
+				.productIsActive(product.getActive())
+				.ProductDiscontinuedAt(product.getDiscontinuedAt())
+				.onHand(inv != null ? inv.getOnHand() : 0)
+				.reserved(inv != null ? inv.getReserved() : 0)
+	            .productCreatedAt(product.getCreatedAt())
+	            .updatedAt(inv != null ? inv.getUpdatedAt() : null)
+				.createdAt(inv != null ? inv.getCreatedAt() : null)
 				.build();
 	}
 	
@@ -87,27 +107,6 @@ public class Mapper {
 				.build();
 	}
 	
-//	public static ProductDTO toDTO(Product product) {
-//		
-//		return ProductDTO.builder()
-//				.id(product.getId())
-//				.name(product.getName())
-//				.description(product.getDescription())
-//				.price(product.getPrice())
-//				.sku(product.getSku())
-//				.imageUrl(product.getImageUrl())
-//				.active(product.getActive())
-//				.discontinuedAt(product.getDiscontinuedAt())
-//				.stock(product.getStock())
-//				.createdAt(product.getCreatedAt())
-////				.categoryIds(
-////						product.getCategories() == null ? null : 
-////							product.getCategories().stream()
-////							.map(Category::getId)
-////							.collect(Collectors.toSet())
-////						)
-//				.build();
-//	}
 	
 	public static CategoryDTO toDTO(Category category) {
 		

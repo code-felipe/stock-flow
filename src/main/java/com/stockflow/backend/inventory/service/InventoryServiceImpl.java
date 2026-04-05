@@ -8,13 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
+import com.stockflow.backend.product.repository.specification.ProductStockSpecification;
 import com.stockflow.backend.product.spec.ProductSpecifications;
 import com.stockflow.backend.utils.mapper.Mapper;
 
@@ -32,7 +35,8 @@ public class InventoryServiceImpl implements IInventoryService{
 	    return s != null && !s.trim().isEmpty();
 	}
 
-
+	
+	// This service uses the native sql - query
 	@Override
 	public Page<ProductStockView> findProducts(ProductFilter filter, Long storeId, Pageable pageable) {
 		if (filter == null) {
@@ -83,6 +87,31 @@ public class InventoryServiceImpl implements IInventoryService{
 	            hasCategory ? filter.getCategory().trim() : null,
 	            pageable
 	    );
+	}
+
+	
+	// uses specification
+	@Override
+	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductFilter filter, Pageable pageable) {
+		// TODO Auto-generated method stub
+		Specification<Product> spec =
+		        Specification.where(ProductStockSpecification.forStore(storeId, filter.getMinStock(), filter.getMaxStock()))
+		            .and(ProductStockSpecification.nameContains(filter.getName()))
+		            .and(ProductStockSpecification.hasCategory(filter.getCategory()))
+		            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
+		            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
+
+		Page<Product> page = repo.findAll(spec, pageable);
+		
+		return page.map(product -> {
+	        // busca el inventory de este producto para este store específico
+	        Inventory inv = product.getInventories().stream()
+	            .filter(i -> i.getId().getStoreId().equals(storeId))
+	            .findFirst()
+	            .orElse(null);
+	        
+	        return Mapper.toSummaryDTO(product, inv);
+	        });
 	}
 
 

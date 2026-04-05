@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 
@@ -18,4 +19,5 @@ public interface IInventoryService {
 //			);
 	
 	public Page<ProductStockView> findProducts(ProductFilter filter, Long storeId, Pageable pageable);
+	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductFilter filter, Pageable pageable);
 }

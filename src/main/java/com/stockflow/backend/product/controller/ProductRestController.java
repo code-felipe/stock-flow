@@ -71,12 +71,17 @@ public class ProductRestController {
         if (search != null && !search.isBlank() && (filter.getName() == null || filter.getName().isBlank())) {
             filter.setName(search);
         }
-        Page<ProductSummaryDTO> result;
-        if (category != null && !category.isBlank()) {
-            result = categoryService.findProductsByCategoryNameIgnoreCase(category, pageable);
-        } else {
-            result = productService.findProducts(filter, pageable);
+        if(category != null && !category.isBlank() && (filter.getCategory() == null || filter.getCategory().isBlank())) {
+        	filter.setCategory(category);
         }
+//        Page<ProductSummaryDTO> result;
+//        if (category != null && !category.isBlank()) {
+//            result = categoryService.findProductsByCategoryNameIgnoreCase(category, pageable);
+//        } else {
+//            result = productService.findProducts(filter, pageable);
+//        }
+        // Specification is now in use.
+        Page<ProductSummaryDTO> result = productService.findProducts(filter, pageable);
 
         return ResponseEntity.ok()
             .header("X-Fields-Excluded", "categoryIds")

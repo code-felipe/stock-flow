@@ -2,6 +2,7 @@ package com.stockflow.backend.product.dto.summary;
 
 import java.time.Instant;
 
+// Use on native query
 public interface ProductStockView {
 	
 	Long getProductId();
