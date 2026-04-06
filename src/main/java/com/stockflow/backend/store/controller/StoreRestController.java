@@ -1,23 +1,31 @@
 package com.stockflow.backend.store.controller;
 
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.utils.mapper.Mapper;
@@ -25,6 +33,7 @@ import com.stockflow.backend.utils.mapper.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/stores")
@@ -61,6 +70,38 @@ public class StoreRestController {
         Page<ProductStockDTO> result = inventoryService.findStockByStore(storeId, filter, pageable);
         return ResponseEntity.ok(result);
     }
+	
+	@PostMapping("/{storeId}/products/{productId}/inventory")
+	@Operation(summary = "Create inventory for product", description = "Create a new inventory")
+	public ResponseEntity<Map<String, Object>> createInventory(
+			@PathVariable Long storeId,
+			@PathVariable Long productId,
+			@RequestBody @Valid InventoryCreateResponseDTO dto
+			){
+		
+		InventoryCreateResponseDTO created = inventoryService.createInventory(storeId, productId, dto);
+		
+		Map<String, Object> body = new HashMap<>();
+		body.put("message", "Inventory created successfully");
+		body.put("inventory", created);
+		
+		return ResponseEntity
+				.created(URI.create("/api/stores/" + storeId + "/products/" + productId + "/inventory"))
+				.body(body);
+	
+	}
+	
+//	@PostMapping("/{storeId}/products/{productId}/inventory")
+//    public ResponseEntity<InventoryCreateResponseDTO> createInventory(
+//            @PathVariable Long storeId,
+//            @PathVariable Long productId,
+//            @RequestBody @Valid InventoryCreateResponseDTO dto) {
+//
+//        InventoryCreateResponseDTO created = inventoryService.createInventory(storeId, productId, dto);
+//        return ResponseEntity
+//                .created(URI.create("/api/stores/" + storeId + "/products/" + productId + "/inventory"))
+//                .body(created);
+//    }
 
 	
 	

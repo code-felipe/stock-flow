@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.category.dto.CategoryDTO;
 import com.stockflow.backend.inventory.domain.Inventory;
+import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
@@ -144,4 +145,17 @@ public class Mapper {
 	        .updatedAt(v.getUpdatedAt())
 	        .build();
 	}
+	
+	
+	public static InventoryCreateResponseDTO createInventory(Inventory inventory) {
+		return InventoryCreateResponseDTO.builder()
+				.productId(inventory.getProduct().getId())
+				.storeId(inventory.getStore().getId())
+				.onHand(inventory.getOnHand())
+				.reserved(inventory.getReserved())
+				.createdAt(inventory.getCreatedAt())
+				.updatedAt(inventory.getUpdatedAt())
+				.build();
+	}
+	
 }

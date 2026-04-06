@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
         ));
     }
     
-    // works on categori, when name is duplicate.
+    // works on categori, when name is duplicate or store id and product id are equals "rare that happens".
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<Map<String, Object>> handleDuplicate(DuplicateResourceException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(

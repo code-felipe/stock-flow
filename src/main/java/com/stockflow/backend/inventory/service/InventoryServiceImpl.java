@@ -8,7 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.stockflow.backend.category.repository.ICategoryRepository;
+import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.inventory.domain.Inventory;
+import com.stockflow.backend.inventory.domain.InventoryId;
+import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.product.domain.Product;
@@ -19,7 +23,11 @@ import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
 import com.stockflow.backend.product.repository.specification.ProductStockSpecification;
 import com.stockflow.backend.product.spec.ProductSpecifications;
+import com.stockflow.backend.store.domain.Store;
+import com.stockflow.backend.store.repository.IStoreRepository;
 import com.stockflow.backend.utils.mapper.Mapper;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class InventoryServiceImpl implements IInventoryService{
@@ -28,7 +36,13 @@ public class InventoryServiceImpl implements IInventoryService{
 	private IInventoryRepository inventoryRepo;
 	
 	@Autowired
-	private IProductRepository repo;
+	private IProductRepository productRepo;
+	
+	@Autowired
+	private ICategoryRepository categoryRepo;
+	
+	@Autowired
+	private IStoreRepository storeRepo;
 
 
 	private boolean hasText(String s) {
@@ -37,6 +51,7 @@ public class InventoryServiceImpl implements IInventoryService{
 
 	
 	// This service uses the native sql - query
+	/*
 	@Override
 	public Page<ProductStockView> findProducts(ProductFilter filter, Long storeId, Pageable pageable) {
 		if (filter == null) {
@@ -88,7 +103,7 @@ public class InventoryServiceImpl implements IInventoryService{
 	            pageable
 	    );
 	}
-
+*/
 	
 	// uses specification
 	@Override
@@ -101,7 +116,7 @@ public class InventoryServiceImpl implements IInventoryService{
 		            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
 		            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
 
-		Page<Product> page = repo.findAll(spec, pageable);
+		Page<Product> page = productRepo.findAll(spec, pageable);
 		
 		return page.map(product -> {
 	        // busca el inventory de este producto para este store específico
@@ -112,6 +127,44 @@ public class InventoryServiceImpl implements IInventoryService{
 	        
 	        return Mapper.toSummaryDTO(product, inv);
 	        });
+	}
+
+
+	@Override
+	public InventoryCreateResponseDTO createInventory(Long storeId, Long productId,
+			InventoryCreateResponseDTO inventory) {
+		// TODO Auto-generated method stub
+		
+		InventoryId invId = new InventoryId(storeId, productId);
+		
+		// validates duplicates between store id and product id
+		if(inventoryRepo.existsById(invId)) {
+			throw new DuplicateResourceException(
+					"Inventory already exists for store: " + storeId + 
+					" and product: " + productId);
+		}
+		
+		Store store = storeRepo.findById(storeId)
+		        .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+
+		Product product = productRepo.findById(productId)
+		        .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+		
+		
+		invId.setProductId(inventory.getProductId());
+		invId.setStoreId(inventory.getStoreId());
+		
+		Inventory inv = Inventory.builder()
+				.id(invId)
+				.onHand(inventory.getOnHand())
+				.reserved(inventory.getReserved())
+				.product(product)
+				.store(store)
+				.build();
+		
+		return Mapper.createInventory(inventoryRepo.save(inv));
+				
 	}
 
 
