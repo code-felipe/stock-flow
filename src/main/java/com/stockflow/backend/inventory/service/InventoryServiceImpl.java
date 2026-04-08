@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.stockflow.backend.category.repository.ICategoryRepository;
 import com.stockflow.backend.exception.DuplicateResourceException;
+import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
 import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
@@ -144,11 +145,12 @@ public class InventoryServiceImpl implements IInventoryService{
 					" and product: " + productId);
 		}
 		
+		
 		Store store = storeRepo.findById(storeId)
-		        .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+		        .orElseThrow(() -> new ResourceNotFoundException("Store not found"));
 
 		Product product = productRepo.findById(productId)
-		        .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+		        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
 		
 		

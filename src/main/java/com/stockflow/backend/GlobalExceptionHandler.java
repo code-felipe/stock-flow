@@ -12,6 +12,7 @@ import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
 
-        Map<String, String> fieldErrors = new java.util.LinkedHashMap<>();
+        Map<String, String> fieldErrors = new LinkedHashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(err ->
                 fieldErrors.put(err.getField(), err.getDefaultMessage())
         );
