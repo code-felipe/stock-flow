@@ -2,6 +2,7 @@ package com.stockflow.backend.product.controller;
 
 import com.stockflow.backend.category.service.ICategoryService;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
@@ -110,16 +111,16 @@ public class ProductRestController {
     
     @PostMapping
     @Operation(summary = "Create product", description = "Create a new product")
-    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductCreateResponseDTO dto) {
+    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductCreateRequestDTO dto) {
 
-    	ProductCreateResponseDTO product = productService.createProduct(dto);
+    	ProductCreateResponseDTO created = productService.createProduct(dto);
 
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Product created successfully");
-        body.put("product", product);
+        body.put("product", created);
 
         return ResponseEntity
-                .created(URI.create("/api/products/" + product.getId()))
+                .created(URI.create("/api/products/" + created.getId()))
                 .body(body);
     }
 

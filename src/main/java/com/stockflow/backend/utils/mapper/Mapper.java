@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.category.dto.CategoryDTO;
 import com.stockflow.backend.inventory.domain.Inventory;
+import com.stockflow.backend.inventory.dto.InventoryCreateRequestDTO;
 import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.product.domain.Product;
+import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
@@ -76,7 +78,7 @@ public class Mapper {
 				.build();
 	}
 	
-	public static ProductCreateResponseDTO toCreateDTO(Product product) {
+	public static ProductCreateResponseDTO createProductResponse(Product product) {
 		
 		return ProductCreateResponseDTO.builder()
 				.id(product.getId())
@@ -88,7 +90,6 @@ public class Mapper {
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
 				.stock(product.getStock())
-				.createdAt(product.getCreatedAt())
 				.build();
 	}
 	
@@ -99,7 +100,6 @@ public class Mapper {
 				.name(product.getName())
 				.description(product.getDescription())
 				.price(product.getPrice())
-				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
@@ -147,14 +147,13 @@ public class Mapper {
 	}
 	
 	
-	public static InventoryCreateResponseDTO createInventory(Inventory inventory) {
+	public static InventoryCreateResponseDTO createInventoryResponse(Inventory inventory) {
 		return InventoryCreateResponseDTO.builder()
 				.productId(inventory.getProduct().getId())
 				.storeId(inventory.getStore().getId())
 				.onHand(inventory.getOnHand())
 				.reserved(inventory.getReserved())
 				.createdAt(inventory.getCreatedAt())
-				.updatedAt(inventory.getUpdatedAt())
 				.build();
 	}
 	

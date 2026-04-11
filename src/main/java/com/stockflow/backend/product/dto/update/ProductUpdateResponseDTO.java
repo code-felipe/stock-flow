@@ -40,10 +40,6 @@ public class ProductUpdateResponseDTO {
     @PositiveOrZero(message = "Price must be >= 0")
     private Double price;
 
-    @Schema(description = "Product unique sku", example = "JWL-RNG-001")
-    @NotBlank(message = "SKU is required")
-    private String sku;
-
     @Schema(description = "Product image representation url", example = "https://example.com/images/gold-ring.jpg")
     @NotBlank(message = "Image is required")
     private String imageUrl;

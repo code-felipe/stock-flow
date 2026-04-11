@@ -21,6 +21,7 @@ import com.stockflow.backend.category.repository.ICategoryRepository;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
@@ -117,7 +118,7 @@ public class ProductServiceImpl implements IProductService{
 
 
 	@Override
-	public ProductCreateResponseDTO createProduct(ProductCreateResponseDTO product) {
+	public ProductCreateResponseDTO createProduct(ProductCreateRequestDTO product) {
 		List<Category> found = catRepo.findAllById(product.getCategoryIds());
 		
 		  if (found.size() != product.getCategoryIds().size()) {
@@ -134,7 +135,10 @@ public class ProductServiceImpl implements IProductService{
 				.active(true)
 				.categories(new HashSet<>(found))
 				.build();
-		return Mapper.toCreateDTO(repo.save(pro));
+		
+		Product saved = repo.save(pro);
+		
+		return Mapper.createProductResponse(saved);
 	}
 	
 	@Transactional
@@ -185,16 +189,6 @@ public class ProductServiceImpl implements IProductService{
 	    }
 	    if (dto.getPrice() != null) {
 	        product.setPrice(dto.getPrice());
-	    }
-	    if (hasText(dto.getSku())) {
-	        String newSku = dto.getSku().trim();
-	        if(!newSku.equals(product.getSku())) {
-	        	if(repo.existsBySkuAndIdNot(newSku, product.getId())) {
-	        		 throw new IllegalArgumentException("SKU already in use: " + newSku);
-	        	}
-	        	product.setSku(newSku);
-	        }
-	        
 	    }
 	    
 	    if (hasText(dto.getImageUrl())) {

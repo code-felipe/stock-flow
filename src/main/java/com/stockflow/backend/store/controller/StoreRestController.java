@@ -21,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stockflow.backend.inventory.dto.InventoryCreateRequestDTO;
 import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.product.dto.ProductFilter;
-import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
+import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.utils.mapper.Mapper;
@@ -68,15 +69,16 @@ public class StoreRestController {
         }
 
         Page<ProductStockDTO> result = inventoryService.findStockByStore(storeId, filter, pageable);
+        
         return ResponseEntity.ok(result);
     }
 	
-	@PostMapping("/{storeId}/products/{productId}/inventory")
+	@PostMapping("/{storeId}/product/{productId}/inventory")
 	@Operation(summary = "Create inventory for product", description = "Create a new inventory")
 	public ResponseEntity<Map<String, Object>> createInventory(
 			@PathVariable Long storeId,
 			@PathVariable Long productId,
-			@RequestBody @Valid InventoryCreateResponseDTO dto
+			@RequestBody @Valid InventoryCreateRequestDTO dto
 			){
 		
 		InventoryCreateResponseDTO created = inventoryService.createInventory(storeId, productId, dto);
@@ -86,7 +88,7 @@ public class StoreRestController {
 		body.put("inventory", created);
 		
 		return ResponseEntity
-				.created(URI.create("/api/stores/" + storeId + "/products/" + productId + "/inventory"))
+				.created(URI.create("/api/stores/" + storeId + "/product/" + productId + "/inventory"))
 				.body(body);
 	
 	}

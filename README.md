@@ -14,7 +14,7 @@ It provides a structured backend service that supports product lifecycle managem
 - Pagination and sorting for large datasets
 - Dynamic product filtering (price, stock, name, SKU)
 - RESTful API design with clear resource modeling
--Input validation and centralized exception handling
+- Input validation and centralized exception handling
 
 ---
 
@@ -56,6 +56,8 @@ Supports full product lifecycle management:
 Soft deletion helps preserve historical integrity and prevents accidental data loss.
 
 - [Product CRUD module details](docs/product-crud-module.md)
+
+
 
 ## Tech Stack
 

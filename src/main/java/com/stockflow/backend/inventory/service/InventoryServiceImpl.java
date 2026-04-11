@@ -13,6 +13,7 @@ import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
+import com.stockflow.backend.inventory.dto.InventoryCreateRequestDTO;
 import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
 import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
@@ -133,7 +134,7 @@ public class InventoryServiceImpl implements IInventoryService{
 
 	@Override
 	public InventoryCreateResponseDTO createInventory(Long storeId, Long productId,
-			InventoryCreateResponseDTO inventory) {
+			InventoryCreateRequestDTO inventoryDTO) {
 		// TODO Auto-generated method stub
 		
 		InventoryId invId = new InventoryId(storeId, productId);
@@ -151,21 +152,18 @@ public class InventoryServiceImpl implements IInventoryService{
 
 		Product product = productRepo.findById(productId)
 		        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-		
-		
-		invId.setProductId(inventory.getProductId());
-		invId.setStoreId(inventory.getStoreId());
 		
 		Inventory inv = Inventory.builder()
 				.id(invId)
-				.onHand(inventory.getOnHand())
-				.reserved(inventory.getReserved())
+				.onHand(inventoryDTO.getOnHand())
+				.reserved(inventoryDTO.getReserved())
 				.product(product)
 				.store(store)
 				.build();
 		
-		return Mapper.createInventory(inventoryRepo.save(inv));
+		Inventory saved = inventoryRepo.save(inv);
+		
+		return Mapper.createInventoryResponse(saved);
 				
 	}
 

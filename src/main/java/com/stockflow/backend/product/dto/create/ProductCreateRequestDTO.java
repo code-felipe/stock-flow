@@ -22,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @Schema(name = "ProductCreateRequestDTO", description = "DTO that represents a product and its objects related on create")
-public class ProductCreateResponseDTO {
+public class ProductCreateRequestDTO {
 
     @Schema(description = "Product id", example = "1")
     private Long id;
@@ -57,6 +57,9 @@ public class ProductCreateResponseDTO {
     private Boolean active;
     @Schema(description = "The time when the product was discontinued", example = "2026-01-31T14:16:36Z")
     private Date discontinuedAt;
+  
+    @NotEmpty(message = "At least one category is required")
+    private Set<Long> categoryIds;
 
 }
 
