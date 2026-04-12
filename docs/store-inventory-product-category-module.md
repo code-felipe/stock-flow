@@ -6,45 +6,13 @@
 
 The idea came from thinking about how a real physical store works. A customer walks in, asks if a product is available, the store checks its stock, and if there is inventory the purchase moves forward. That's exactly what this module models.
 
-From the admin side, the goal is simple: be able to manage what products a store has, and how much stock is available for each one. That's it — `Store → Inventory → Product`.
+From the admin side, the goal is simple: be able to manage what products a store has, and how much stock is available for each one — `Store → Inventory → Product`.
 
 By keeping this isolated, the client-facing catalog can be built separately on top of the same data, without mixing the two concerns.
 
 ---
 
-# 2. Why Not Just Use `@Query`?
-
-At first, `@Query` with manual SQL worked fine — simple entities, few relationships, straightforward queries.
-
-The problem showed up when filters started stacking and entity relationships grew. The query to bring products from a store along with inventory and category ended up very long, hard to read, and fragile — one small change could break the whole thing.
-
-That's when **JPA Specifications** came in. Instead of writing one big SQL string, each filter becomes its own small Java method. Hibernate takes those filters, builds the SQL automatically, and runs it against the database.
-
-The flow looks like this:
-
-```
-Your code → Specification → Hibernate (ORM) → JDBC → Database
-```
-
-You stop writing raw SQL and start working at a higher level. Hibernate handles the translation.
-
-```java
-Specification<Product> spec =
-    Specification.where(ProductSpecification.nameContains(filter.getName()))
-        .and(ProductSpecification.hasSku(filter.getSku()))
-        .and(ProductSpecification.minPrice(filter.getMinPrice()))
-        .and(ProductSpecification.maxPrice(filter.getMaxPrice()))
-        .and(ProductSpecification.isActive(filter.getActive()))
-        .and(ProductSpecification.hasCategory(filter.getCategory()));
-
-Page<Product> page = repo.findAll(spec, pageable);
-```
-
-Each filter is optional — if the value is `null`, that filter is simply skipped. No conditionals, no string concatenation, no fragile query building.
-
----
-
-# 3. The Store Catalog Constraint
+# 2. The Store Catalog Constraint
 
 One important requirement: **every product must show up**, even if no inventory record exists for that store yet. The admin needs to know what products have stock and which ones don't.
 
@@ -68,7 +36,7 @@ This way, a product with no inventory still returns `onHand: 0` instead of `null
 
 ---
 
-# 4. Why a Projection Interface?
+# 3. Why a Projection Interface?
 
 Since the result combines data from `Product`, `Inventory`, and computed values, it doesn't map to any single entity. Returning a `Product` would be wrong because it doesn't carry store-specific stock. Returning an `Inventory` would be wrong because products with no inventory would be excluded.
 
@@ -91,7 +59,7 @@ public interface ProductStockView {
 
 ---
 
-# 5. Store Catalog vs Client Catalog
+# 4. Store Catalog vs Client Catalog
 
 Both endpoints serve similar data but for different audiences with different needs.
 
@@ -109,32 +77,11 @@ Both endpoints serve similar data but for different audiences with different nee
 
 ---
 
-# 6. From Native Query to Specifications
+# 5. From Native Query to Specifications
 
-The native query was the starting point — it worked, but it was long, hard to read, and easy to break with a typo. Writing raw SQL by hand also means that any mistake only shows up at runtime, not while coding.
+The first approach was writing the query manually with `@Query`. It worked, but as filters stacked and relationships grew, the SQL became long, hard to read, and fragile — one typo and it only breaks at runtime.
 
-Specifications solved that. Instead of one big SQL string, each filter is its own method in `ProductSpecification`. Hibernate takes those and builds the query automatically — no manual SQL, no typos slipping through unnoticed.
-
-The service ended up looking like this:
-
-```java
-Specification<Product> spec =
-    Specification.where(ProductSpecification.nameContains(filter.getName()))
-        .and(ProductSpecification.hasId(filter.getId()))
-        .and(ProductSpecification.hasSku(filter.getSku()))
-        .and(ProductSpecification.minPrice(filter.getMinPrice()))
-        .and(ProductSpecification.maxPrice(filter.getMaxPrice()))
-        .and(ProductSpecification.minStock(filter.getMinStock()))
-        .and(ProductSpecification.maxStock(filter.getMaxStock()))
-        .and(ProductSpecification.isActive(filter.getActive()))
-        .and(ProductSpecification.discontinuedBefore(filter.getDiscontinuedAt()))
-        .and(ProductSpecification.hasCategory(filter.getCategory()));
-
-Page<Product> page = repo.findAll(spec, pageable);
-return page.map(Mapper::toSummaryDTO);
-```
-
-Instead of looking like this:
+**Native query approach:**
 
 ```java
 @Query(
@@ -194,6 +141,31 @@ Page<ProductStockView> findStoreCatalog(
 );
 ```
 
-Each method handles its own null check internally — if a filter wasn't sent in the request, it's ignored automatically. The query adjusts itself depending on what the client actually sends.
+That's when **JPA Specifications** came in. Instead of one big SQL string, each filter becomes its own small Java method. Hibernate takes those, builds the SQL automatically, and runs it — no raw SQL, no typos slipping through unnoticed.
 
-> The native query is kept in the codebase as a reference for the `ProductStockView` projection (Store Catalog with `LEFT JOIN`), where Specifications don't apply because the result isn't a single entity.
+```
+Your code → Specification → Hibernate (ORM) → JDBC → Database
+```
+
+**Specification approach:**
+
+```java
+Specification<Product> spec =
+    Specification.where(ProductSpecification.nameContains(filter.getName()))
+        .and(ProductSpecification.hasId(filter.getId()))
+        .and(ProductSpecification.hasSku(filter.getSku()))
+        .and(ProductSpecification.minPrice(filter.getMinPrice()))
+        .and(ProductSpecification.maxPrice(filter.getMaxPrice()))
+        .and(ProductSpecification.minStock(filter.getMinStock()))
+        .and(ProductSpecification.maxStock(filter.getMaxStock()))
+        .and(ProductSpecification.isActive(filter.getActive()))
+        .and(ProductSpecification.discontinuedBefore(filter.getDiscontinuedAt()))
+        .and(ProductSpecification.hasCategory(filter.getCategory()));
+
+Page<Product> page = repo.findAll(spec, pageable);
+return page.map(Mapper::toSummaryDTO);
+```
+
+Each filter handles its own null check internally — if a filter wasn't sent in the request, it's ignored automatically.
+
+> Specifications replaced the native query for the admin product endpoints. The native query is still used for the `ProductStockView` projection because that result combines multiple tables with `LEFT JOIN` and computed values — Specifications only work when the result maps to a single entity.
