@@ -42,7 +42,6 @@ Supported filters:
 
 Example:
 **GET** /api/products?name=ring&minPrice=10&maxPrice=50&page=0&size=10
-- [Product filtering module details](docs/product-filter-module.md)
 
 This allows clients to implement flexible product search similar to e-commerce filtering experiences.
 
@@ -58,8 +57,6 @@ Supports full product lifecycle management:
 - Retrieve active catalog items
 
 Soft deletion helps preserve historical integrity and prevents accidental data loss.
-
-- [Product CRUD module details](docs/product-crud-module.md)
 
 # 3. Architectural Context
 

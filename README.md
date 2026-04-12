@@ -28,6 +28,8 @@ The domain model is designed to reflect a realistic catalog/inventory structure 
 ---
 
 ## Package Structure
+
+```text
 com.stockflow.backend/
 │
 ├── category/
@@ -60,6 +62,8 @@ com.stockflow.backend/
 │
 └── utils/
     └── mapper/
+```
+
 ---
 
 ## Modules
@@ -68,7 +72,7 @@ Each module groups one or more related entities under a shared business concern.
 
 | Module | Entities | Description | Docs |
 |---|---|---|---|
-| **Admin — Stock Management** | `Store` · `Product` · `Inventory` | Gives the admin full control over what products exist, which store holds them, and how much stock is available. Intentionally isolated from the customer-facing layer. | [View →](docs/store-inventory-product-category-module.md) |
+| **Admin — Stock Management** | `Store` · `Product` · `Inventory` | Gives the admin full control over what products exist, which store holds them, and how much stock is available. Intentionally isolated from the customer-facing layer. | [View](docs/store-inventory-product-category-module.md) |
 | **Catalog** | `Category` | Manages how products are classified and grouped for browsing.|
 
 > Module docs follow the same format: overview, responsibilities, API endpoints, and design decisions.
