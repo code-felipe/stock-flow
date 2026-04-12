@@ -1,4 +1,4 @@
-package com.stockflow.backend.inventory.dto;
+package com.stockflow.backend.inventory.dto.create;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -16,6 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Schema(name = "InventoryCreateRequestDTO", description = "DTO Request that represents only the necesary attributes for a inventoryo on create")
 public class InventoryCreateRequestDTO {
 	
 

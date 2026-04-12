@@ -1,4 +1,4 @@
-package com.stockflow.backend.inventory.dto;
+package com.stockflow.backend.inventory.dto.summary;
 
 import java.time.Instant;
 import java.util.Date;

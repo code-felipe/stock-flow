@@ -25,6 +25,7 @@ import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.dto.update.ProductUpdateRequestDTO;
 import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
 import com.stockflow.backend.product.repository.specification.ProductSpecification;
@@ -167,7 +168,7 @@ public class ProductServiceImpl implements IProductService{
 	}
 	
 	@Override
-	public ProductUpdateResponseDTO updateProduct(Long id, ProductUpdateResponseDTO p) {
+	public ProductUpdateResponseDTO updateProduct(Long id, ProductUpdateRequestDTO p) {
 		// TODO Auto-generated method stub
 		Product product = repo.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
@@ -178,7 +179,7 @@ public class ProductServiceImpl implements IProductService{
 	}
 	
 	
-	private void applyUpdates(Product product, ProductUpdateResponseDTO dto) {
+	private void applyUpdates(Product product, ProductUpdateRequestDTO dto) {
 
 		
 	    if (hasText(dto.getName())) {

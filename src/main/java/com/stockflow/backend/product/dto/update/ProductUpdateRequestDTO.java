@@ -21,8 +21,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "ProductUpdateResponseDTO", description = "DTO that represents a product and its objects related on update")
-public class ProductUpdateResponseDTO {
+@Schema(name = "ProductUpdateRequestDTO", description = "DTO that represents a product and its objects related on update")
+public class ProductUpdateRequestDTO {
 
     @Schema(description = "Product id", example = "1")
     private Long id;
@@ -30,18 +30,15 @@ public class ProductUpdateResponseDTO {
     @Schema(description = "Product name", example = "Gold Minimalist Ring")
     @NotBlank(message = "Name is required")
     private String name;
-    
+
     @Schema(description = "Product description", example = "18k gold plated minimalist ring with smooth finish")
     @NotBlank(message = "Description is required")
     private String description;
-    
+
     @Schema(description = "Product price", example = "4.99")
     @NotNull(message = "Price is required")
     @PositiveOrZero(message = "Price must be >= 0")
     private Double price;
-    
-    @Schema(description = "Product SKU - Unique", example = "Unique product identifier JWL-DUAL-020")
-	private String sku;
 
     @Schema(description = "Product image representation url", example = "https://example.com/images/gold-ring.jpg")
     @NotBlank(message = "Image is required")

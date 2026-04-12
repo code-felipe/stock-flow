@@ -6,6 +6,7 @@ import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.dto.update.ProductUpdateRequestDTO;
 import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.product.service.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -166,7 +167,7 @@ public class ProductRestController {
     )
     public ResponseEntity<Map<String, Object>> updateProduct(
     		@PathVariable Long id,
-    		@Valid @RequestBody ProductUpdateResponseDTO dto) {
+    		@Valid @RequestBody ProductUpdateRequestDTO dto) {
     	
     	ProductUpdateResponseDTO updated = productService.updateProduct(id, dto);
     	

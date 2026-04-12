@@ -1,6 +1,9 @@
 package com.stockflow.backend.inventory.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,25 +11,32 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.category.repository.ICategoryRepository;
 import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
-import com.stockflow.backend.inventory.dto.InventoryCreateRequestDTO;
-import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
-import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
+import com.stockflow.backend.inventory.dto.create.InventoryCreateRequestDTO;
+import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
+import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
+import com.stockflow.backend.inventory.dto.update.InventoryUpdateRequestDTO;
+import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.ProductFilter;
+import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
 import com.stockflow.backend.product.repository.specification.ProductStockSpecification;
+import com.stockflow.backend.product.service.IProductService;
 import com.stockflow.backend.product.spec.ProductSpecifications;
 import com.stockflow.backend.store.domain.Store;
+import com.stockflow.backend.store.dto.StoreSummaryDTO;
 import com.stockflow.backend.store.repository.IStoreRepository;
+import com.stockflow.backend.store.service.IStoreService;
 import com.stockflow.backend.utils.mapper.Mapper;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -41,10 +51,16 @@ public class InventoryServiceImpl implements IInventoryService{
 	private IProductRepository productRepo;
 	
 	@Autowired
+	private IProductService productService;
+	
+	@Autowired
 	private ICategoryRepository categoryRepo;
 	
 	@Autowired
 	private IStoreRepository storeRepo;
+	
+	@Autowired
+	private IStoreService storeService;
 
 
 	private boolean hasText(String s) {
@@ -118,7 +134,7 @@ public class InventoryServiceImpl implements IInventoryService{
 		            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
 		            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
 
-		Page<Product> page = productRepo.findAll(spec, pageable);
+		Page<Product> page = productRepo.findAll(spec, pageable);// needs to use productService
 		
 		return page.map(product -> {
 	        // busca el inventory de este producto para este store específico
@@ -147,18 +163,19 @@ public class InventoryServiceImpl implements IInventoryService{
 		}
 		
 		
-		Store store = storeRepo.findById(storeId)
-		        .orElseThrow(() -> new ResourceNotFoundException("Store not found"));
-
-		Product product = productRepo.findById(productId)
-		        .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+		StoreSummaryDTO storeDTO = storeService.findById(storeId);
+		
+		ProductDetailDTO productDTO = productService.findById(productId);
+		Product product = Mapper.toDetail(productDTO);
+		
+		product.setCategories(resolveCategoriesFromIds(productDTO.getCategoryIds()));
 		
 		Inventory inv = Inventory.builder()
 				.id(invId)
 				.onHand(inventoryDTO.getOnHand())
 				.reserved(inventoryDTO.getReserved())
 				.product(product)
-				.store(store)
+				.store(Mapper.summaryEntity(storeDTO))
 				.build();
 		
 		Inventory saved = inventoryRepo.save(inv);
@@ -167,5 +184,50 @@ public class InventoryServiceImpl implements IInventoryService{
 				
 	}
 
+
+	@Override
+	public InventoryUpdateResponseDTO updateInventory(Long storeId, Long productId,
+			InventoryUpdateRequestDTO dto) {
+		// TODO Auto-generated method stub
+
+		InventoryId invId = new InventoryId(storeId, productId);
+
+	    Inventory inv = inventoryRepo.findById(invId)
+	        .orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+	    
+		inv.setOnHand(dto.getOnHand());
+		inv.setReserved(dto.getReserved());
+		
+		Inventory saved = inventoryRepo.save(inv);
+		
+		return Mapper.updateInventoryResponse(saved);
+	}
+	
+	private Set<Category> resolveCategoriesFromIds(Set<Long> categoryIds) {
+	    if (categoryIds == null || categoryIds.isEmpty()) return null;
+	    return new HashSet<>(categoryRepo.findAllById(categoryIds));
+	}
+//	private void applyUpdates(Inventory inv, InventoryUpdateResponseDTO dto) {
+//		
+//		Product p = inv.getProduct();
+//		Store s = inv.getStore();
+//		
+//		
+//		
+//		if(dto.getProductId() != null) {
+//			inv.setId(null);
+//		}
+//		
+//		if(dto.getOnHand() != null) {
+//			inv.setOnHand(dto.getOnHand());
+//		}
+//		
+//		if(dto.getReserved() != null) {
+//			inv.setReserved(dto.getReserved());
+//		}
+//		
+//	}
+//	
+	
 
 }

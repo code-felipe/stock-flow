@@ -1,6 +1,8 @@
-package com.stockflow.backend.inventory.dto;
+package com.stockflow.backend.inventory.dto.update;
 
 import java.time.Instant;
+
+import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,24 +17,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InventoryCreateResponseDTO {
+public class InventoryUpdateRequestDTO {
 	
-	@Schema(description = "Product id", example = "1")
-	private Long productId;
-	
-	@Schema(description = "Category id", example = "1")
-	private Long storeId;
-
 	@Schema(description = "Inventory stock on hand for the specific product", example = "35")	
 	private Integer onHand;
 	
 	@Schema(description = "Inventory stock on reserved for the specific product", example = "3")
 	private Integer reserved;
-
-	@Schema(description = "Store creation date", example = "2026-01-31T14:16:36Z")
-    private Instant createdAt;
-	
-	@Schema(description = "Store update date", example = "2026-01-31T14:16:36Z")
-    private Instant updatedAt;
-	
 }

@@ -8,13 +8,14 @@ It provides a structured backend service that supports product lifecycle managem
 
 ## Core Features
 
-- Product management (CRUD)
+- Product management (CRUD): [Product CRUD module details](docs/product-crud-module.md)
 - Inventory tracking per product
 - Soft deletion to preserve historical data
 - Pagination and sorting for large datasets
-- Dynamic product filtering (price, stock, name, SKU)
+- Dynamic product filtering (price, stock, name, SKU): [Product Filter module details](docs/product-filter-module.md)
 - RESTful API design with clear resource modeling
 - Input validation and centralized exception handling
+- Architecture - Package by Feature - [Architecture details](docs/architecture.md)
 
 ---
 
@@ -24,39 +25,55 @@ The domain model is designed to reflect a realistic catalog/inventory structure 
 
 ![UML diagram](docs/diagrams/uml-diagram.svg)
 
-
-## Product Filtering
-
-StockFlow includes a dynamic filtering module designed for real catalog search scenarios.
-
-Supported filters:
-
-- Case-insensitive name search
-- Price range filtering
-- Stock range filtering
-- Pagination and sorting
-
-Example:
-**GET** /api/products?name=ring&minPrice=10&maxPrice=50&page=0&size=10
-- [Product filtering module details](docs/product-filter-module.md)
-
-This allows clients to implement flexible product search similar to e-commerce filtering experiences.
-
 ---
 
-## Product CRUD
+## Package Structure
+com.stockflow.backend/
+│
+├── category/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/
+│
+├── product/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/
+│
+├── inventory/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/
+│
+├── store/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/
+│
+└── utils/
+    └── mapper/
+---
 
-Supports full product lifecycle management:
+## Modules
 
-- Create products
-- Update product details
-- Soft delete products (logical deletion)
-- Retrieve active catalog items
+Each module groups one or more related entities under a shared business concern. Below is a brief description of each, with a link to its detailed documentation.
 
-Soft deletion helps preserve historical integrity and prevents accidental data loss.
+| Module | Entities | Description | Docs |
+|---|---|---|---|
+| **Admin — Stock Management** | `Store` · `Product` · `Inventory` | Gives the admin full control over what products exist, which store holds them, and how much stock is available. Intentionally isolated from the customer-facing layer. | [View →](docs/store-inventory-product-category-module.md) |
+| **Catalog** | `Category` | Manages how products are classified and grouped for browsing.|
 
-- [Product CRUD module details](docs/product-crud-module.md)
+> Module docs follow the same format: overview, responsibilities, API endpoints, and design decisions.
 
+---
 
 
 ## Tech Stack

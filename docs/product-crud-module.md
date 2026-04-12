@@ -4,6 +4,19 @@ Brief documentation of the **Product CRUD module** in the API.
 
 ---
 
+## Product CRUD
+
+Supports full product lifecycle management:
+
+- Create products
+- Update product details
+- Soft delete products (logical deletion)
+- Retrieve active catalog items
+
+Soft deletion helps preserve historical integrity and prevents accidental data loss.
+
+---
+
 ## Product Entity
 
 The `Product` resource represents inventory/catalog products with attributes such as:
@@ -14,7 +27,6 @@ The `Product` resource represents inventory/catalog products with attributes suc
 - `price`
 - `sku`
 - `imageUrl`
-- `stock`
 - `active`
 - `createdAt`
 - `discontinuedAt`
@@ -62,7 +74,7 @@ Example 1:
 ```json
 {
   "price": 19.99,
-  "stock": 10,
+  "stock": 10, // about to be deleted - inventory has been added to this
   "categoryIds": [1, 3]
   
 }
@@ -75,7 +87,7 @@ Example 2:
   "price": 680.29,
   "sku": "JWL-RNG-001",
   "imageUrl": "https://example.com/images/gold-ring.jpg",
-  "stock": 25.00,
+  "stock": 25.00,// about to be deleted - inventory has been added to this
   "categoryIds": [1, 2]
 }
 

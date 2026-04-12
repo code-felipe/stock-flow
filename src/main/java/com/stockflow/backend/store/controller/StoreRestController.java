@@ -16,19 +16,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stockflow.backend.inventory.dto.InventoryCreateRequestDTO;
-import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
-import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
+import com.stockflow.backend.inventory.dto.create.InventoryCreateRequestDTO;
+import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
+import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
+import com.stockflow.backend.inventory.dto.update.InventoryUpdateRequestDTO;
+import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockView;
+import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.utils.mapper.Mapper;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -93,6 +97,25 @@ public class StoreRestController {
 	
 	}
 	
+	
+	@PutMapping("/{storeId}/product/{productId}/inventory")
+    @Operation(
+            summary = "Edit inventory",
+            description = "Edit a inventory from its id"
+    )
+    public ResponseEntity<Map<String, Object>> updateInventory(
+    		@PathVariable Long storeId,
+    		@PathVariable Long productId,
+    		@Valid @RequestBody InventoryUpdateRequestDTO  dto) {
+    	
+		InventoryUpdateResponseDTO updated = inventoryService.updateInventory(storeId, productId, dto);
+    	
+    	 Map<String, Object> body = new HashMap<>();
+         body.put("message", "Inventory have been updated successfully");
+         body.put("inventory", updated);
+         
+         return ResponseEntity.ok().body(body);
+    }
 //	@PostMapping("/{storeId}/products/{productId}/inventory")
 //    public ResponseEntity<InventoryCreateResponseDTO> createInventory(
 //            @PathVariable Long storeId,

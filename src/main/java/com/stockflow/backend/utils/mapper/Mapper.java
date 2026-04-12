@@ -5,9 +5,10 @@ import java.util.stream.Collectors;
 import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.category.dto.CategoryDTO;
 import com.stockflow.backend.inventory.domain.Inventory;
-import com.stockflow.backend.inventory.dto.InventoryCreateRequestDTO;
-import com.stockflow.backend.inventory.dto.InventoryCreateResponseDTO;
-import com.stockflow.backend.inventory.dto.InventorySummaryDTO;
+import com.stockflow.backend.inventory.dto.create.InventoryCreateRequestDTO;
+import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
+import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
+import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
@@ -78,6 +79,22 @@ public class Mapper {
 				.build();
 	}
 	
+	public static Product toDetail(ProductDetailDTO dto) {
+		return Product.builder()
+				.id(dto.getId())
+				.name(dto.getName())
+				.description(dto.getDescription())
+				.price(dto.getPrice())
+				.sku(dto.getSku())
+				.imageUrl(dto.getImageUrl())
+				.active(dto.getActive())
+				.discontinuedAt(dto.getDiscontinuedAt())
+				.stock(dto.getStock())
+				.createdAt(dto.getCreatedAt())
+				.categories(null) // services looks for the categories.
+				.build();
+	}
+	
 	public static ProductCreateResponseDTO createProductResponse(Product product) {
 		
 		return ProductCreateResponseDTO.builder()
@@ -100,11 +117,11 @@ public class Mapper {
 				.name(product.getName())
 				.description(product.getDescription())
 				.price(product.getPrice())
+				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
 				.stock(product.getStock())
-				.createdAt(product.getCreatedAt())
 				.build();
 	}
 	
@@ -131,6 +148,16 @@ public class Mapper {
 				.build();
 	}
 	
+	public static Store summaryEntity(StoreSummaryDTO dto) {
+		return Store.builder()
+				.id(dto.getId())
+				.name(dto.getName())
+				.description(dto.getDescription())
+				.address(dto.getAddress())
+				.createdAt(dto.getCreatedAt())
+				.build();
+	}
+	
 	public static InventorySummaryDTO toSummaryDTO(ProductStockView v) {
 	    return InventorySummaryDTO.builder()
 	        .productId(v.getProductId())
@@ -154,6 +181,15 @@ public class Mapper {
 				.onHand(inventory.getOnHand())
 				.reserved(inventory.getReserved())
 				.createdAt(inventory.getCreatedAt())
+				.build();
+	}
+	
+	public static InventoryUpdateResponseDTO updateInventoryResponse(Inventory inventory) {
+		return InventoryUpdateResponseDTO.builder()
+				.productId(inventory.getProduct().getId())
+				.storeId(inventory.getStore().getId())
+				.onHand(inventory.getOnHand())
+				.reserved(inventory.getReserved())
 				.build();
 	}
 	

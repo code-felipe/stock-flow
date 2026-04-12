@@ -9,6 +9,7 @@ import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.dto.update.ProductUpdateRequestDTO;
 import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 
 
@@ -21,6 +22,6 @@ public interface IProductService {
 	public ProductCreateResponseDTO createProduct(ProductCreateRequestDTO product);
 	public ProductUpdateResponseDTO discontinueProduct(Long id); 
 	public ProductUpdateResponseDTO restore(Long id);
-	public ProductUpdateResponseDTO updateProduct(Long id, ProductUpdateResponseDTO product);
+	public ProductUpdateResponseDTO updateProduct(Long id, ProductUpdateRequestDTO product);
 
 }
