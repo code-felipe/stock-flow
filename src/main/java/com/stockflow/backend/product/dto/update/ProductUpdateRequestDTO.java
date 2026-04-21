@@ -44,10 +44,10 @@ public class ProductUpdateRequestDTO {
     @NotBlank(message = "Image is required")
     private String imageUrl;
 
-    @Schema(description = "Product stock quantity", example = "25.00")
-    @NotNull(message = "Stock is required")
-    @PositiveOrZero(message = "Stock must be >= 0")
-    private BigDecimal stock;
+//    @Schema(description = "Product stock quantity", example = "25.00")
+//    @NotNull(message = "Stock is required")
+//    @PositiveOrZero(message = "Stock must be >= 0")
+//    private BigDecimal stock;
     
     @Schema(description = "Enable - Disable for catalog", example = "false")
     private Boolean active;

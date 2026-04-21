@@ -132,7 +132,7 @@ public class ProductServiceImpl implements IProductService{
 				.price(product.getPrice())
 				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
-				.stock(product.getStock())
+//				.stock(product.getStock())
 				.active(true)
 				.categories(new HashSet<>(found))
 				.build();
@@ -195,9 +195,9 @@ public class ProductServiceImpl implements IProductService{
 	    if (hasText(dto.getImageUrl())) {
 	        product.setImageUrl(dto.getImageUrl().trim());
 	    }
-	    if (dto.getStock() != null) {
-	        product.setStock(dto.getStock());
-	    }
+//	    if (dto.getStock() != null) {
+//	        product.setStock(dto.getStock());
+//	    }
 	    if (dto.getActive() != null) {
 	        product.setActive(dto.getActive());
 	    }

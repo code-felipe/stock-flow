@@ -48,8 +48,8 @@ public class Product {
 	@Column(name = "image_url")
 	private String imageUrl;
 	// this attribute 'stock' will be replaced by the Inventory
-	@Column(nullable = false)
-	private BigDecimal stock;
+//	@Column(nullable = false)
+//	private BigDecimal stock;
 	@Column(nullable = false)
 	private Boolean active = true;
 	@Column(name="discontinued_at")

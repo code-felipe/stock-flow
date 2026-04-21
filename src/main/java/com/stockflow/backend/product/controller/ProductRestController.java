@@ -1,6 +1,5 @@
 package com.stockflow.backend.product.controller;
 
-import com.stockflow.backend.category.service.ICategoryService;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
@@ -44,8 +43,6 @@ public class ProductRestController {
     @Autowired
     private IProductService productService;
     
-    @Autowired
-    private ICategoryService categoryService;
     
 
     @GetMapping

@@ -33,7 +33,7 @@ public class Mapper {
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
-				.stock(product.getStock())
+//				.stock(product.getStock())
 				.createdAt(product.getCreatedAt())
 				.build();
 	}
@@ -68,7 +68,7 @@ public class Mapper {
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
-				.stock(product.getStock())
+//				.stock(product.getStock())
 				.createdAt(product.getCreatedAt())
 				.categoryIds(
 						product.getCategories() == null ? null : 
@@ -89,7 +89,7 @@ public class Mapper {
 				.imageUrl(dto.getImageUrl())
 				.active(dto.getActive())
 				.discontinuedAt(dto.getDiscontinuedAt())
-				.stock(dto.getStock())
+//				.stock(dto.getStock())
 				.createdAt(dto.getCreatedAt())
 				.categories(null) // services looks for the categories.
 				.build();
@@ -106,7 +106,7 @@ public class Mapper {
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
-				.stock(product.getStock())
+//				.stock(product.getStock())
 				.build();
 	}
 	
@@ -121,7 +121,7 @@ public class Mapper {
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
 				.discontinuedAt(product.getDiscontinuedAt())
-				.stock(product.getStock())
+//				.stock(product.getStock())
 				.build();
 	}
 	
