@@ -42,8 +42,6 @@ public class ProductRestController {
 
     @Autowired
     private IProductService productService;
-    
-    
 
     @GetMapping
     @Operation(

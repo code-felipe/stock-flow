@@ -19,6 +19,7 @@ import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
 import com.stockflow.backend.inventory.dto.create.InventoryCreateRequestDTO;
 import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
+import com.stockflow.backend.inventory.dto.delete.InventoryDeleteResponseDTO;
 import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateRequestDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
@@ -202,6 +203,18 @@ public class InventoryServiceImpl implements IInventoryService{
 		
 		return Mapper.updateInventoryResponse(saved);
 	}
+
+	@Override
+	public InventoryDeleteResponseDTO deleteInventory(Long storeId, Long productId) {
+		InventoryId invId = new InventoryId(storeId, productId);
+		
+		Inventory inv = inventoryRepo.findById(invId)
+				.orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+		
+		 inventoryRepo.delete(inv);
+
+		return Mapper.deleteInventoryResponse(inv);
+	}
 	
 	private Set<Category> resolveCategoriesFromIds(Set<Long> categoryIds) {
 	    if (categoryIds == null || categoryIds.isEmpty()) return null;
@@ -228,6 +241,7 @@ public class InventoryServiceImpl implements IInventoryService{
 //		
 //	}
 //	
-	
+
+
 
 }

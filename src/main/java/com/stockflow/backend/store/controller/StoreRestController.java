@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.stockflow.backend.inventory.dto.create.InventoryCreateRequestDTO;
 import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
+import com.stockflow.backend.inventory.dto.delete.InventoryDeleteResponseDTO;
 import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateRequestDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
@@ -113,6 +115,23 @@ public class StoreRestController {
     	 Map<String, Object> body = new HashMap<>();
          body.put("message", "Inventory have been updated successfully");
          body.put("inventory", updated);
+         
+         return ResponseEntity.ok().body(body);
+    }
+	@DeleteMapping("/{storeId}/product/{productId}/inventory")
+    @Operation(
+            summary = "Delete inventory",
+            description = "Delete a inventory from combined 'store-product' id's"
+    )
+    public ResponseEntity<Map<String, Object>> deleteInventory(
+    		@PathVariable Long storeId,
+    		@PathVariable Long productId) {
+    	
+		InventoryDeleteResponseDTO delete = inventoryService.deleteInventory(storeId, productId);
+    	
+    	 Map<String, Object> body = new HashMap<>();
+         body.put("message", "Inventory have been deleted successfully");
+         body.put("inventory", delete);
          
          return ResponseEntity.ok().body(body);
     }

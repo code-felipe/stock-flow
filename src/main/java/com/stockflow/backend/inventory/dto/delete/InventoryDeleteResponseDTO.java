@@ -1,4 +1,8 @@
-package com.stockflow.backend.inventory.dto.update;
+package com.stockflow.backend.inventory.dto.delete;
+
+import java.time.Instant;
+
+import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -13,8 +17,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InventoryUpdateRequestDTO {
+public class InventoryDeleteResponseDTO {
 	
+	@Schema(description = "Product id", example = "1")
+	private Long productId;
+	
+	@Schema(description = "Store id", example = "1")
+	private Long storeId;
+
 	@Schema(description = "Inventory stock on hand for the specific product", example = "35")	
 	private Integer onHand;
 	

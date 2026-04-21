@@ -1,6 +1,5 @@
 package com.stockflow.backend.product.dto.summary;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Date;
 

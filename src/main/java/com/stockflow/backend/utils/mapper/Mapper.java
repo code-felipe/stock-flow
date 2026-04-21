@@ -7,6 +7,7 @@ import com.stockflow.backend.category.dto.CategoryDTO;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.dto.create.InventoryCreateRequestDTO;
 import com.stockflow.backend.inventory.dto.create.InventoryCreateResponseDTO;
+import com.stockflow.backend.inventory.dto.delete.InventoryDeleteResponseDTO;
 import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.product.domain.Product;
@@ -186,6 +187,15 @@ public class Mapper {
 	
 	public static InventoryUpdateResponseDTO updateInventoryResponse(Inventory inventory) {
 		return InventoryUpdateResponseDTO.builder()
+				.productId(inventory.getProduct().getId())
+				.storeId(inventory.getStore().getId())
+				.onHand(inventory.getOnHand())
+				.reserved(inventory.getReserved())
+				.build();
+	}
+	
+	public static InventoryDeleteResponseDTO deleteInventoryResponse(Inventory inventory) {
+		return InventoryDeleteResponseDTO.builder()
 				.productId(inventory.getProduct().getId())
 				.storeId(inventory.getStore().getId())
 				.onHand(inventory.getOnHand())
