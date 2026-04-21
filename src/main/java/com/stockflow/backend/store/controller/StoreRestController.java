@@ -59,15 +59,6 @@ public class StoreRestController {
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size
 	) {
-		// uses native query and uses ProductSummaryDTO
-//	    Pageable pageable = PageRequest.of(page, size);
-//
-//	    if (hasText(search) && !hasText(filter.getName())) {
-//	        filter.setName(search);
-//	    }
-//
-//	    Page<ProductStockView> pg = inventoryService.findProducts(filter, storeId, pageable);
-//	    return ResponseEntity.ok(pg.map(Mapper::toSummaryDTO));
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         if (hasText(search) && !hasText(filter.getName())) {
@@ -135,20 +126,7 @@ public class StoreRestController {
          
          return ResponseEntity.ok().body(body);
     }
-//	@PostMapping("/{storeId}/products/{productId}/inventory")
-//    public ResponseEntity<InventoryCreateResponseDTO> createInventory(
-//            @PathVariable Long storeId,
-//            @PathVariable Long productId,
-//            @RequestBody @Valid InventoryCreateResponseDTO dto) {
-//
-//        InventoryCreateResponseDTO created = inventoryService.createInventory(storeId, productId, dto);
-//        return ResponseEntity
-//                .created(URI.create("/api/stores/" + storeId + "/products/" + productId + "/inventory"))
-//                .body(created);
-//    }
-
-	
-	
+		
 	private boolean hasText(String s) {
 	    return s != null && !s.trim().isEmpty();
 	}

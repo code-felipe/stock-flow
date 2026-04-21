@@ -1,6 +1,5 @@
 package com.stockflow.backend.product.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,9 +46,6 @@ public class Product {
 	private String sku;
 	@Column(name = "image_url")
 	private String imageUrl;
-	// this attribute 'stock' will be replaced by the Inventory
-//	@Column(nullable = false)
-//	private BigDecimal stock;
 	@Column(nullable = false)
 	private Boolean active = true;
 	@Column(name="discontinued_at")

@@ -1,10 +1,6 @@
 package com.stockflow.backend.store.dto;
 
-import java.math.BigDecimal;
 import java.util.Date;
-
-import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

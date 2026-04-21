@@ -40,53 +40,7 @@ public class ProductServiceImpl implements IProductService{
 	
 	@Autowired
 	private ICategoryRepository catRepo;
-//	
-//	@Override
-//	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable) {
-//
-//	    if (filter == null) {
-//	        return repo.findAll(pageable).map(Mapper::toSummaryDTO);
-//	    }
-//
-//	    Page<Product> page;
-//
-//	    boolean hasExtraFilters =
-//	            filter.getId() != null ||
-//	            hasText(filter.getSku()) ||
-//	            filter.getMinPrice() != null ||
-//	            filter.getMaxPrice() != null ||
-//	            filter.getMinStock() != null ||
-//	            filter.getMaxStock() != null ||
-//	            filter.getActive() != null ||
-//	            filter.getDiscontinuedAt() != null;
-//
-//	    boolean hasNameSearch = hasText(filter.getName());
-//
-//	    if (!hasExtraFilters) {
-//	        // solo name search o nada
-//	        if (!hasNameSearch) {
-//	            page = repo.findAll(pageable);
-//	        } else {
-//	            page = repo.findByNameContainingIgnoreCase(filter.getName().trim(), pageable);
-//	        }
-//	    } else {
-//	        // name search + filters
-//	        Specification<Product> spec = ProductSpecifications.withFilters(
-//	                filter.getName(),
-//	                filter.getId(),
-//	                filter.getSku(),
-//	                filter.getMinPrice(),
-//	                filter.getMaxPrice(),
-//	                filter.getMinStock(),
-//	                filter.getMaxStock(),
-//	                filter.getActive(),
-//	                filter.getDiscontinuedAt()
-//	        );
-//	        page = repo.findAll(spec, pageable);
-//	    }
-//
-//	    return page.map(Mapper::toSummaryDTO);
-//	}
+
 	@Override
 	public Page<ProductSummaryDTO> findProducts(ProductFilter filter, Pageable pageable) {
 
@@ -132,7 +86,6 @@ public class ProductServiceImpl implements IProductService{
 				.price(product.getPrice())
 				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
-//				.stock(product.getStock())
 				.active(true)
 				.categories(new HashSet<>(found))
 				.build();
@@ -195,9 +148,6 @@ public class ProductServiceImpl implements IProductService{
 	    if (hasText(dto.getImageUrl())) {
 	        product.setImageUrl(dto.getImageUrl().trim());
 	    }
-//	    if (dto.getStock() != null) {
-//	        product.setStock(dto.getStock());
-//	    }
 	    if (dto.getActive() != null) {
 	        product.setActive(dto.getActive());
 	    }

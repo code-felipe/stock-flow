@@ -15,16 +15,8 @@ import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 
 
 public interface IInventoryService {
-//	public List<InventorySummaryDTO> list(Long storeId);
-	
-//	public Page<ProductStockView> findProducts(
-//			Long storeId, String name, String category, Pageable pageable
-//			);
-	
-	// uses native query
-//	public Page<ProductStockView> findProducts(ProductFilter filter, Long storeId, Pageable pageable);
+
 	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductFilter filter, Pageable pageable);
-//	public InventorySummaryDTO findById(Long id);
 	public InventoryCreateResponseDTO createInventory(Long storeId, Long productId, InventoryCreateRequestDTO inventory);
 	public InventoryUpdateResponseDTO updateInventory(Long storeId, Long productId, InventoryUpdateRequestDTO inventory);
 	public InventoryDeleteResponseDTO deleteInventory(Long storeId, Long productId);

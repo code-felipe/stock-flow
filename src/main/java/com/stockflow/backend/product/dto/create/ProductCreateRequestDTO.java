@@ -1,6 +1,4 @@
 package com.stockflow.backend.product.dto.create;
-
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -48,11 +46,6 @@ public class ProductCreateRequestDTO {
     @NotBlank(message = "Image is required")
     private String imageUrl;
 
-//    @Schema(description = "Product stock quantity", example = "25.00")
-//    @NotNull(message = "Stock is required")
-//    @PositiveOrZero(message = "Stock must be >= 0")
-//    private BigDecimal stock;
-    
     @Schema(description = "Enable - Disable for catalog", example = "false")
     private Boolean active;
     @Schema(description = "The time when the product was discontinued", example = "2026-01-31T14:16:36Z")

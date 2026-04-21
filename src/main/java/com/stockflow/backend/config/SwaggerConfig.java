@@ -22,7 +22,6 @@ public class SwaggerConfig {
     public GroupedOpenApi stockFlowApiGroup() {
         return GroupedOpenApi.builder()
                 .group("stockflow")
-                // equivalente a: .paths(PathSelectors.ant("/api/**"))
                 .pathsToMatch("/api/**")
                 .build();
     }

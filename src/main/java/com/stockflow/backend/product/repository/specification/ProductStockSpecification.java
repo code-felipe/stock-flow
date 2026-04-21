@@ -55,14 +55,6 @@ public class ProductStockSpecification {
             );
         };
     }
-    
-    // only for the Product module
-//    public static Specification<Product> isActive(Boolean active) {
-//        return (root, query, cb) -> {
-//            if (active == null) return cb.isTrue(root.get("active"));
-//            return cb.equal(root.get("active"), active);
-//        };
-//    }
 
     public static Specification<Product> minPrice(Double minPrice) {
         return (root, query, cb) -> {

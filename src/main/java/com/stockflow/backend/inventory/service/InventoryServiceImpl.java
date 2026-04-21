@@ -58,72 +58,8 @@ public class InventoryServiceImpl implements IInventoryService{
 	private ICategoryRepository categoryRepo;
 	
 	@Autowired
-	private IStoreRepository storeRepo;
-	
-	@Autowired
 	private IStoreService storeService;
 
-
-	private boolean hasText(String s) {
-	    return s != null && !s.trim().isEmpty();
-	}
-
-	
-	// This service uses the native sql - query
-	/*
-	@Override
-	public Page<ProductStockView> findProducts(ProductFilter filter, Long storeId, Pageable pageable) {
-		if (filter == null) {
-	        return inventoryRepo.findProductStockByStore(storeId, pageable);
-	    }
-
-	    boolean hasExtraFilters =
-	            filter.getId() != null ||                // (nota: id en stock view no lo estás filtrando en SQL aún)
-	            hasText(filter.getSku()) ||
-	            filter.getMinPrice() != null ||
-	            filter.getMaxPrice() != null ||
-	            filter.getMinStock() != null ||
-	            filter.getMaxStock() != null ||
-	            filter.getActive() != null ||
-	            filter.getDiscontinuedAt() != null;
-
-	    boolean hasNameSearch = hasText(filter.getName());
-	    boolean hasCategory = hasText(filter.getCategory()); // si lo agregas al filter, recomendado
-
-	    // Caso: no hay filtros extra (solo name/category o nada)
-	    if (!hasExtraFilters) {
-	        // si no hay ni name ni category -> query base simple
-	        if (!hasNameSearch && !hasCategory) {
-	            return inventoryRepo.findProductStockByStore(storeId, pageable);
-	        }
-
-	        // si solo hay name/category -> llama query filtrada, el resto null
-	        return inventoryRepo.findStoreStockWithFilters(
-	                storeId,
-	                hasNameSearch ? filter.getName().trim() : null,
-	                null, null, null, null, null, null, null,
-	                hasCategory ? filter.getCategory().trim() : null,
-	                pageable
-	        );
-	    }
-
-	    // Caso: hay filtros extra (name + extras + category)
-	    return inventoryRepo.findStoreStockWithFilters(
-	            storeId,
-	            hasNameSearch ? filter.getName().trim() : null,
-	            hasText(filter.getSku()) ? filter.getSku().trim() : null,
-	            filter.getMinPrice(),
-	            filter.getMaxPrice(),
-	            filter.getMinStock(),
-	            filter.getMaxStock(),
-	            filter.getActive(),
-	            filter.getDiscontinuedAt(),
-	            hasCategory ? filter.getCategory().trim() : null,
-	            pageable
-	    );
-	}
-*/
-	
 	// uses specification
 	@Override
 	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductFilter filter, Pageable pageable) {
@@ -220,28 +156,5 @@ public class InventoryServiceImpl implements IInventoryService{
 	    if (categoryIds == null || categoryIds.isEmpty()) return null;
 	    return new HashSet<>(categoryRepo.findAllById(categoryIds));
 	}
-//	private void applyUpdates(Inventory inv, InventoryUpdateResponseDTO dto) {
-//		
-//		Product p = inv.getProduct();
-//		Store s = inv.getStore();
-//		
-//		
-//		
-//		if(dto.getProductId() != null) {
-//			inv.setId(null);
-//		}
-//		
-//		if(dto.getOnHand() != null) {
-//			inv.setOnHand(dto.getOnHand());
-//		}
-//		
-//		if(dto.getReserved() != null) {
-//			inv.setReserved(dto.getReserved());
-//		}
-//		
-//	}
-//	
-
-
 
 }

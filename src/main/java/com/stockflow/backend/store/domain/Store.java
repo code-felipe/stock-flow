@@ -1,11 +1,6 @@
 package com.stockflow.backend.store.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Set;
-
-import com.stockflow.backend.category.domain.Category;
-import com.stockflow.backend.product.domain.Product;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

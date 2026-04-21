@@ -1,6 +1,5 @@
 package com.stockflow.backend.product.dto.update;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -43,11 +42,6 @@ public class ProductUpdateRequestDTO {
     @Schema(description = "Product image representation url", example = "https://example.com/images/gold-ring.jpg")
     @NotBlank(message = "Image is required")
     private String imageUrl;
-
-//    @Schema(description = "Product stock quantity", example = "25.00")
-//    @NotNull(message = "Stock is required")
-//    @PositiveOrZero(message = "Stock must be >= 0")
-//    private BigDecimal stock;
     
     @Schema(description = "Enable - Disable for catalog", example = "false")
     private Boolean active;

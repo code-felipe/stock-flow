@@ -71,12 +71,7 @@ public class ProductRestController {
         if(category != null && !category.isBlank() && (filter.getCategory() == null || filter.getCategory().isBlank())) {
         	filter.setCategory(category);
         }
-//        Page<ProductSummaryDTO> result;
-//        if (category != null && !category.isBlank()) {
-//            result = categoryService.findProductsByCategoryNameIgnoreCase(category, pageable);
-//        } else {
-//            result = productService.findProducts(filter, pageable);
-//        }
+
         // Specification is now in use.
         Page<ProductSummaryDTO> result = productService.findProducts(filter, pageable);
 

@@ -19,13 +19,6 @@ import lombok.ToString;
 @Schema(name = "InventoryCreateRequestDTO", description = "DTO Request that represents only the necesary attributes for a inventoryo on create")
 public class InventoryCreateRequestDTO {
 	
-
-//	@Schema(description = "Product id", example = "1")
-//	private Long productId;
-//	
-//	@Schema(description = "Category id", example = "1")
-//	private Long storeId;
-//	
 	@Schema(description = "Inventory stock on hand for the specific product", example = "35")
 	@Min(0)
 	private Integer onHand;
@@ -33,12 +26,5 @@ public class InventoryCreateRequestDTO {
 	@Schema(description = "Inventory stock on reserved for the specific product", example = "3")
 	@Min(0)
 	private Integer reserved;
-
-//	@Schema(description = "Store creation date", example = "2026-01-31T14:16:36Z")
-//    private Instant createdAt;
-//	
-//	@Schema(description = "Store update date", example = "2026-01-31T14:16:36Z")
-//    private Instant updatedAt;
-//	
 	
 }
