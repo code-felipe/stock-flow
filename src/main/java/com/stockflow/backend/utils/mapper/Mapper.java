@@ -212,6 +212,7 @@ public class Mapper {
 				.total(order.getTotal())
 				.storeName(order.getStore().getName())
 				.storeAddress(order.getStore().getAddress())
+				.orderDate(order.getOrderDate())
 				.items(
 						order.getOrderItems() == null ? null :
 						order.getOrderItems().stream()

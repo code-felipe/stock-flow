@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.stockflow.backend.exception.DuplicateResourceException;
+import com.stockflow.backend.exception.OutOfStockException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 
 import java.time.Instant;
@@ -108,5 +109,16 @@ public class GlobalExceptionHandler {
                 "error", "Conflict",
                 "message", ex.getMessage()
         ));
+    }
+    
+    //Handles 500 exception when the quantity is higher than onHand - stock
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<Map<String, Object>> handleOutOfStock(OutOfStockException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+        		"timestamp", Instant.now().toString(),
+        		"status", 409,
+        		"error", "Product quantity is higher than stock - onHand",
+        		"message", ex.getMessage()
+        		));
     }
 }

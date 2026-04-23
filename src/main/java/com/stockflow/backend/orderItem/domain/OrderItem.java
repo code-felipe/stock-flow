@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,10 @@ public class OrderItem {
 	private Double unitPrice;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "inventory_id", nullable = false)
+	@JoinColumns({
+	    @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false),
+	    @JoinColumn(name = "product_id", referencedColumnName = "product_id", nullable = false)
+	})
 	private Inventory inventory;
 
 

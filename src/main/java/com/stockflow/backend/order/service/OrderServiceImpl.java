@@ -60,7 +60,7 @@ public class OrderServiceImpl implements IOrderService{
 		});
 		
 		Double total = cart.stream()
-				.mapToDouble(c -> c.getQuantity() * c.getUnitPrice())
+				.mapToDouble(c -> c.subTotal())
 				.sum();
 		order.setTotal(total);
 		
