@@ -157,4 +157,16 @@ public class InventoryServiceImpl implements IInventoryService{
 	    return new HashSet<>(categoryRepo.findAllById(categoryIds));
 	}
 
+
+	@Override
+	public Inventory findById(Long storeId, Long producId) {
+		// TODO Auto-generated method stub
+		InventoryId invId = new InventoryId(storeId, producId);
+		
+		Inventory inv = inventoryRepo.findById(invId)
+				.orElseThrow(() -> new ResourceNotFoundException("Inventory not found"));
+		
+		return inv;
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.stockflow.backend.order.domain;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class Order {
 	private Store store;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<OrderItem> orderItems;
+	private List<OrderItem> orderItems = new ArrayList<>();
 	
 	@PrePersist
 	void prePersist() {
