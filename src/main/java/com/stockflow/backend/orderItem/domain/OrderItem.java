@@ -41,5 +41,8 @@ public class OrderItem {
 	})
 	private Inventory inventory;
 
-
+	
+	public Double subTotal() {
+		return this.quantity * this.unitPrice;
+	}
 }

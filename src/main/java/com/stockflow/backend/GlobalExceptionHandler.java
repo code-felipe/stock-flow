@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.OutOfStockException;
@@ -14,6 +15,7 @@ import com.stockflow.backend.exception.ResourceNotFoundException;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -120,5 +122,22 @@ public class GlobalExceptionHandler {
         		"error", "Product quantity is higher than stock - onHand",
         		"message", ex.getMessage()
         		));
+    }
+    
+    //Handles all errors on list. Special useful for the CartItemRequest
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<Map<String, Object>> handleMethodValidation(HandlerMethodValidationException ex) {
+        // extrae los mensajes aquí
+    	List<String> errors = ex.getAllErrors().stream()
+                .map(err -> err.getDefaultMessage())
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                "timestamp", Instant.now().toString(),
+                "status", 400,
+                "error", "Bad Request",
+                "message", "Validation failed",
+                "errors", errors
+        ));
     }
 }

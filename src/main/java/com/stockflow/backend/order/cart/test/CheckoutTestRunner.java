@@ -10,7 +10,8 @@ import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.inventory.service.IInventoryService;
-import com.stockflow.backend.order.cart.CartItem;
+import com.stockflow.backend.order.cart.CartItemRequest;
+import com.stockflow.backend.order.cart.CartItemResponse;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.service.IOrderService;
 import com.stockflow.backend.store.dto.StoreSummaryDTO;
@@ -34,20 +35,20 @@ public class CheckoutTestRunner implements CommandLineRunner{
 		
 		StoreSummaryDTO store = storeService.findById(1L);
 		
-		List<CartItem> cart = List.of(
-				CartItem.builder()
-				.storeId(store.getId())
-				.productName("Churros de arequipe")
+		List<CartItemRequest> cart = List.of(
+				CartItemRequest.builder()
+//				.storeId(store.getId())
+//				.productName("Churros de arequipe")
 				.productId(2L)
-				.unitPrice(10.00)
+//				.unitPrice(10.00)
 				.quantity(3)
 				.build(),
 				
-				CartItem.builder()
-				.storeId(store.getId())
-				.productName("Churro de queso")
+				CartItemRequest.builder()
+//				.storeId(store.getId())
+//				.productName("Churro de queso")
 				.productId(1L)
-				.unitPrice(12.40)
+//				.unitPrice(12.40)
 				.quantity(30)
 				.build()
 				);

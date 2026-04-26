@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @Schema(name = "Cart Item", description = "Session item")
-public class CartItem {
+public class CartItemResponse {
 	
 	@Schema(description = "Product id", example = "2")
 	private Long productId;
@@ -28,7 +28,6 @@ public class CartItem {
 	private String productName;
 	
 	@Schema(description = "The product price fecth by inventory", example = "$10.00")
-
     @Positive(message = "Unit price must be greater than 0")
 	private Double unitPrice;
 	
@@ -36,6 +35,7 @@ public class CartItem {
 	@Min(value = 1, message = "Quantity must be atleats 1")
 	private Integer quantity;
 	
+	// Present data
 	public Double subTotal() {
 		return this.unitPrice * this.quantity;
 	}

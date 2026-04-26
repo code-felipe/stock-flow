@@ -12,6 +12,7 @@ import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.order.domain.Order;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
 import com.stockflow.backend.orderItem.domain.OrderItem;
 import com.stockflow.backend.orderItem.dto.create.OrderItemResponseDTO;
 import com.stockflow.backend.product.domain.Product;
@@ -226,5 +227,17 @@ public class Mapper {
 						.collect(Collectors.toSet())
 						)
 				.build();
+	}
+	
+	public static OrderSummaryResponseDTO toSummaryDTO(Order order) {
+		return OrderSummaryResponseDTO.builder()
+				.id(order.getId())
+				.orderStatus(order.getOrderStatus())
+				.orderDate(order.getOrderDate())
+				.total(order.getTotal())
+				.storeName(order.getStore().getName())
+				.storeAddress(order.getStore().getAddress())
+				.build();
+				
 	}
 }
