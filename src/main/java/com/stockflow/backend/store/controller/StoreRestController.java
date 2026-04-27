@@ -109,6 +109,9 @@ public class StoreRestController {
          
          return ResponseEntity.ok().body(body);
     }
+	
+	//It will end with orphan OrderItems plus is hard to implement. Easy way is to update the stock
+	/*
 	@DeleteMapping("/{storeId}/product/{productId}/inventory")
     @Operation(
             summary = "Delete inventory",
@@ -126,8 +129,10 @@ public class StoreRestController {
          
          return ResponseEntity.ok().body(body);
     }
+    */
 		
 	private boolean hasText(String s) {
 	    return s != null && !s.trim().isEmpty();
 	}
+	
 }

@@ -139,7 +139,10 @@ public class InventoryServiceImpl implements IInventoryService{
 		
 		return Mapper.updateInventoryResponse(saved);
 	}
-
+	
+	
+	//It will end with orphan OrderItems plus is hard to implement. Easy way is to update the stock
+	/*
 	@Override
 	public InventoryDeleteResponseDTO deleteInventory(Long storeId, Long productId) {
 		InventoryId invId = new InventoryId(storeId, productId);
@@ -151,11 +154,12 @@ public class InventoryServiceImpl implements IInventoryService{
 
 		return Mapper.deleteInventoryResponse(inv);
 	}
-	
+		*/
 	private Set<Category> resolveCategoriesFromIds(Set<Long> categoryIds) {
 	    if (categoryIds == null || categoryIds.isEmpty()) return null;
 	    return new HashSet<>(categoryRepo.findAllById(categoryIds));
 	}
+
 
 
 	@Override

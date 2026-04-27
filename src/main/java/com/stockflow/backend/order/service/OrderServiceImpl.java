@@ -66,7 +66,7 @@ public class OrderServiceImpl implements IOrderService{
 				throw new OutOfStockException("Stock is insufficient " + inv.getProduct().getName());
 				}
 			if (!inv.getProduct().getActive()) {
-			        throw new ProductNotAvailableException("Product is not available: " + inv.getProduct().getName());
+			        throw new ProductNotAvailableException("Product is not available: " + inv.getProduct().getName() + " id: " + inv.getProduct().getId() );
 			   	}
 			//discount on stock - onHand
 			inv.setOnHand(inv.getOnHand() - c.getQuantity());

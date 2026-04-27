@@ -21,5 +21,5 @@ public interface IInventoryService {
 	public Inventory findById(Long storeId, Long producId);
 	public InventoryCreateResponseDTO createInventory(Long storeId, Long productId, InventoryCreateRequestDTO inventory);
 	public InventoryUpdateResponseDTO updateInventory(Long storeId, Long productId, InventoryUpdateRequestDTO inventory);
-	public InventoryDeleteResponseDTO deleteInventory(Long storeId, Long productId);
+//	public InventoryDeleteResponseDTO deleteInventory(Long storeId, Long productId);
 }
