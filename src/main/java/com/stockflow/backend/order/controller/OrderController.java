@@ -26,6 +26,7 @@ import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.order.cart.CartItemRequest;
 import com.stockflow.backend.order.cart.CartItemResponse;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
 import com.stockflow.backend.order.service.IOrderService;
 import com.stockflow.backend.product.dto.ProductFilter;
@@ -39,7 +40,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/admin/store")
 @Tag(name = "Order", description = "Endpoints for Order")
 public class OrderController {
 	
@@ -50,22 +51,25 @@ public class OrderController {
 	private IOrderService orderService;
 	
 	
-	@GetMapping("/store/{storeId}")
-	public ResponseEntity<Page<OrderSummaryResponseDTO>> findAllOrders(
+	@GetMapping("/{storeId}/orders")
+	public ResponseEntity<Map<String, Object>> findAllOrders(
 	        @PathVariable Long storeId,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size
 	) {
-		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "orderDate"));
+	    Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "orderDate"));
 
+	    Page<OrderSummaryResponseDTO> result = orderService.findAllOrdersByStoreId(storeId, pageable);
 
-        Page<OrderSummaryResponseDTO> result = orderService.findAllOrdersByStoreId(storeId, pageable);
-        
-        return ResponseEntity.ok(result);
-    }
+	    Map<String, Object> body = new HashMap<>();
+	    body.put("message", "All orders were successfully fetched");
+	    body.put("orders", result);
+
+	    return ResponseEntity.ok(body);
+	}
 	
-	@PostMapping("/store/{storeId}")
-	public ResponseEntity<Map<String, Object>> checout(
+	@PostMapping("/{storeId}/order")
+	public ResponseEntity<Map<String, Object>> checkout(
 			@Parameter(description = "Store id", example = "1")
 	        @PathVariable Long storeId,
 	        @Valid @RequestBody List<@Valid CartItemRequest> carts
@@ -79,10 +83,26 @@ public class OrderController {
 		body.put("order", created);
 		 
 		return ResponseEntity
-				.created(URI.create("/api/order/store/"+store.getId()))
+				.created(URI.create("/api/admin/store/"+store.getId()+"/order"))
 				.body(body);
 		
 		 
 	 }
+	
+	@GetMapping("/{storeId}/order/{orderId}")
+	public ResponseEntity<Map<String, Object>> detail(
+			@Parameter(description = "store id", example = "1")
+			@PathVariable Long storeId,
+			@Parameter(description = "order id", example = "2")
+			@PathVariable Long orderId
+			){
+		OrderDetailedResponseDTO order = orderService.orderDetail(orderId, storeId);
+		Map<String, Object> body = new HashMap<>();
+		body.put("message", "Order detail successfully fetched");
+		body.put("order", order);
+		
+		return ResponseEntity.ok(body);
+		
+	}
 	
 }

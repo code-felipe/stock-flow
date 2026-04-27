@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.stockflow.backend.exception.OutOfStockException;
+import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.inventory.service.IInventoryService;
@@ -17,6 +18,7 @@ import com.stockflow.backend.order.cart.CartItemRequest;
 import com.stockflow.backend.order.cart.CartItemResponse;
 import com.stockflow.backend.order.domain.Order;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
 import com.stockflow.backend.order.repository.IOrderRespository;
 import com.stockflow.backend.orderItem.domain.OrderItem;
@@ -92,6 +94,15 @@ public class OrderServiceImpl implements IOrderService{
 		
 		return page.map(o -> Mapper.toSummaryDTO(o));
 		
+	}
+
+	@Override
+	public OrderDetailedResponseDTO orderDetail(Long orderId, Long storeId) {
+		// TODO Auto-generated method stub
+		Order order = orderRepo.findByIdAndStoreId(orderId, storeId)
+				.orElseThrow(() -> new ResourceNotFoundException("Order not found!")) ;
+		
+		return Mapper.toDetail(order);
 	}
 		
 //		cart.stream().forEach(c -> {

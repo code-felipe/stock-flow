@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/stores")
+@RequestMapping("/api/admin/stores")
 @Tag(name = "Stores", description = "Store endpoints")
 public class StoreRestController {
 	

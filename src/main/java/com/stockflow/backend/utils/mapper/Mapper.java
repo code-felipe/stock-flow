@@ -12,6 +12,7 @@ import com.stockflow.backend.inventory.dto.summary.InventorySummaryDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.order.domain.Order;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
 import com.stockflow.backend.orderItem.domain.OrderItem;
 import com.stockflow.backend.orderItem.dto.create.OrderItemResponseDTO;
@@ -239,5 +240,28 @@ public class Mapper {
 				.storeAddress(order.getStore().getAddress())
 				.build();
 				
+	}
+	
+	public static OrderDetailedResponseDTO toDetail(Order order) {
+		return OrderDetailedResponseDTO.builder()
+				.id(order.getId())
+				.orderStatus(order.getOrderStatus())
+				.orderDate(order.getOrderDate())
+				.total(order.getTotal())
+				.storeName(order.getStore().getName())
+				.storeAddress(order.getStore().getAddress())
+				.items(order.getOrderItems() == null ? null :
+						order.getOrderItems().stream()
+						.map(item -> OrderItemResponseDTO.builder()
+								.productName(item.getInventory().getProduct().getName())
+								.quantity(item.getQuantity())
+								.unitPrice(item.getUnitPrice())
+								.subtotal(item.getUnitPrice() * item.getQuantity())
+								.build()
+								
+								)
+						.collect(Collectors.toSet())
+						)
+				.build();
 	}
 }

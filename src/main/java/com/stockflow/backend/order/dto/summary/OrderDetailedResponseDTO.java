@@ -3,6 +3,8 @@ package com.stockflow.backend.order.dto.summary;
 import java.time.Instant;
 import java.util.Set;
 
+import com.stockflow.backend.orderItem.dto.create.OrderItemResponseDTO;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +18,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "OrderSummaryResponseDTO", description = "DTO that shows a detail info about the order")
-public class OrderSummaryResponseDTO {
+@Schema(name = "OrderSummaryResponseDTO", description = "DTO Response that sumarize the order")
+public class OrderDetailedResponseDTO {
 	
 	@Schema(description = "Order id", example = "1")
 	private Long id;
@@ -36,4 +38,8 @@ public class OrderSummaryResponseDTO {
 	
 	@Schema(description = "Store address description", example = "248 Cooper chase ct")
 	private String storeAddress;
+	
+	@Schema(description = "OrderItems id's where can also reference Iventory - Product", example = "1 - 2 - 3")
+	private Set<OrderItemResponseDTO> items;
+
 }
