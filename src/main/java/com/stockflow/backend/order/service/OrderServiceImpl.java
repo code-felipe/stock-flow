@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.stockflow.backend.exception.OutOfStockException;
@@ -18,9 +19,11 @@ import com.stockflow.backend.order.cart.CartItemRequest;
 import com.stockflow.backend.order.cart.CartItemResponse;
 import com.stockflow.backend.order.domain.Order;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
 import com.stockflow.backend.order.repository.IOrderRespository;
+import com.stockflow.backend.order.spec.OrderSpecifications;
 import com.stockflow.backend.orderItem.domain.OrderItem;
 import com.stockflow.backend.store.domain.Store;
 import com.stockflow.backend.utils.mapper.Mapper;
@@ -45,6 +48,8 @@ public class OrderServiceImpl implements IOrderService{
 	
 		Order order = new Order();
 		order.setOrderDate(Instant.now());
+		//Example to test the dateFrom dateTo: needs to deactivate prePersists()
+		//order.setOrderDate(Instant.parse("2026-02-10T14:00:00Z"));
 		order.setOrderStatus("PENDING");
 		order.setStore(store);
 		order.setTotal(0.0);
@@ -56,8 +61,10 @@ public class OrderServiceImpl implements IOrderService{
 			Inventory inv = inventoryService.findById(store.getId(), c.getProductId());
 			
 			if(inv.getOnHand() < c.getQuantity()) {
-			throw new OutOfStockException("Stock is insufficient " + inv.getProduct().getName());
+				throw new OutOfStockException("Stock is insufficient " + inv.getProduct().getName());
 		}
+			//discount on stock - onHand
+			inv.setOnHand(inv.getOnHand() - c.getQuantity());
 			
 			OrderItem item = new OrderItem();
 			item.setInventory(inv);
@@ -88,11 +95,17 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public Page<OrderSummaryResponseDTO> findAllOrdersByStoreId(Long storeId, Pageable pageable) {
+	public Page<OrderSummaryResponseDTO> findAllOrdersByStoreId(Long storeId, OrderFilter filter, Pageable pageable) {
 		// TODO Auto-generated method stub
-		Page<Order> page = orderRepo.findByStoreId(storeId, pageable);
-		
-		return page.map(o -> Mapper.toSummaryDTO(o));
+		 Specification<Order> spec = OrderSpecifications.withFilters(
+		            filter.getOrderStatus(),
+		            filter.getDateFrom(),
+		            filter.getDateTo(),
+		            filter.getTotalMin(),
+		            filter.getTotalMax()
+		    );
+	
+		 return orderRepo.findAll(spec, pageable).map(Mapper::toSummaryDTO);
 		
 	}
 

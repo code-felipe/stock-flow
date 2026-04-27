@@ -35,6 +35,7 @@ public class ProductStockSpecification {
 	        return cb.and(predicates.toArray(new Predicate[0]));
 	    };
 	}
+	
     public static Specification<Product> nameContains(String name) {
         return (root, query, cb) -> {
             if (name == null || name.isBlank()) return null;

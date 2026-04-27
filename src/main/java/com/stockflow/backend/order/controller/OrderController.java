@@ -26,6 +26,7 @@ import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.order.cart.CartItemRequest;
 import com.stockflow.backend.order.cart.CartItemResponse;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
 import com.stockflow.backend.order.service.IOrderService;
@@ -54,12 +55,13 @@ public class OrderController {
 	@GetMapping("/{storeId}/orders")
 	public ResponseEntity<Map<String, Object>> findAllOrders(
 	        @PathVariable Long storeId,
+	        @ModelAttribute OrderFilter filter,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size
 	) {
 	    Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "orderDate"));
 
-	    Page<OrderSummaryResponseDTO> result = orderService.findAllOrdersByStoreId(storeId, pageable);
+	    Page<OrderSummaryResponseDTO> result = orderService.findAllOrdersByStoreId(storeId, filter, pageable);
 
 	    Map<String, Object> body = new HashMap<>();
 	    body.put("message", "All orders were successfully fetched");

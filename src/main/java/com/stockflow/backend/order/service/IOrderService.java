@@ -7,16 +7,15 @@ import org.springframework.data.domain.Pageable;
 
 import com.stockflow.backend.order.cart.CartItemRequest;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
+import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
-
-
 import com.stockflow.backend.store.domain.Store;
 
 public interface IOrderService {
 	
 	public OrderCreateResponsetDTO checkout(List<CartItemRequest> cart, Store store);
-	public Page<OrderSummaryResponseDTO> findAllOrdersByStoreId(Long storeId,Pageable pageable);
+	public Page<OrderSummaryResponseDTO> findAllOrdersByStoreId(Long storeId, OrderFilter filter,  Pageable pageable);
 	public OrderDetailedResponseDTO orderDetail(Long orderId, Long storeId);
 
 }
