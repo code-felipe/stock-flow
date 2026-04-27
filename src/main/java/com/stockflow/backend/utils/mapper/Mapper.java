@@ -1,5 +1,7 @@
 package com.stockflow.backend.utils.mapper;
 
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.stockflow.backend.category.domain.Category;
@@ -215,18 +217,7 @@ public class Mapper {
 				.storeName(order.getStore().getName())
 				.storeAddress(order.getStore().getAddress())
 				.orderDate(order.getOrderDate())
-				.items(
-						order.getOrderItems() == null ? null :
-						order.getOrderItems().stream()
-						.map(item -> OrderItemResponseDTO.builder()
-								.productName(item.getInventory().getProduct().getName())
-								.quantity(item.getQuantity())
-								.unitPrice(item.getUnitPrice())
-								.subtotal(item.getUnitPrice() * item.getQuantity())
-								.build()
-								)
-						.collect(Collectors.toSet())
-						)
+				.items(mapOrderItems(order.getOrderItems()))
 				.build();
 	}
 	
@@ -250,18 +241,21 @@ public class Mapper {
 				.total(order.getTotal())
 				.storeName(order.getStore().getName())
 				.storeAddress(order.getStore().getAddress())
-				.items(order.getOrderItems() == null ? null :
-						order.getOrderItems().stream()
-						.map(item -> OrderItemResponseDTO.builder()
-								.productName(item.getInventory().getProduct().getName())
-								.quantity(item.getQuantity())
-								.unitPrice(item.getUnitPrice())
-								.subtotal(item.getUnitPrice() * item.getQuantity())
-								.build()
-								
-								)
-						.collect(Collectors.toSet())
-						)
+				.items(mapOrderItems(order.getOrderItems()))
 				.build();
+	}
+	
+	private static Set<OrderItemResponseDTO> mapOrderItems(List<OrderItem> items){
+		if(items == null || items.isEmpty()) return null;
+		
+		return items.stream()
+				.map(item -> OrderItemResponseDTO.builder()
+						.productName(item.getInventory().getProduct().getName())
+						.quantity(item.getQuantity())
+						.unitPrice(item.getUnitPrice())
+						.subtotal(item.getUnitPrice() * item.getQuantity())
+						.build())
+				.collect(Collectors.toSet());
+		
 	}
 }

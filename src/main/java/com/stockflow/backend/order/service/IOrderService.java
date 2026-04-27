@@ -17,5 +17,6 @@ public interface IOrderService {
 	public OrderCreateResponsetDTO checkout(List<CartItemRequest> cart, Store store);
 	public Page<OrderSummaryResponseDTO> findAllOrdersByStoreId(Long storeId, OrderFilter filter,  Pageable pageable);
 	public OrderDetailedResponseDTO orderDetail(Long orderId, Long storeId);
+	public OrderSummaryResponseDTO cancel(Long orderId, Long storeId);
 
 }

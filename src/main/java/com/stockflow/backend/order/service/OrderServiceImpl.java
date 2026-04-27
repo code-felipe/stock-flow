@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.stockflow.backend.exception.OutOfStockException;
+import com.stockflow.backend.exception.ProductNotAvailableException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
@@ -22,6 +23,7 @@ import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
+import com.stockflow.backend.order.enumerate.OrderStatus;
 import com.stockflow.backend.order.repository.IOrderRespository;
 import com.stockflow.backend.order.spec.OrderSpecifications;
 import com.stockflow.backend.orderItem.domain.OrderItem;
@@ -50,7 +52,7 @@ public class OrderServiceImpl implements IOrderService{
 		order.setOrderDate(Instant.now());
 		//Example to test the dateFrom dateTo: needs to deactivate prePersists()
 		//order.setOrderDate(Instant.parse("2026-02-10T14:00:00Z"));
-		order.setOrderStatus("PENDING");
+		order.setOrderStatus(OrderStatus.CONFIRM.name());
 		order.setStore(store);
 		order.setTotal(0.0);
 		
@@ -62,7 +64,10 @@ public class OrderServiceImpl implements IOrderService{
 			
 			if(inv.getOnHand() < c.getQuantity()) {
 				throw new OutOfStockException("Stock is insufficient " + inv.getProduct().getName());
-		}
+				}
+			if (!inv.getProduct().getActive()) {
+			        throw new ProductNotAvailableException("Product is not available: " + inv.getProduct().getName());
+			   	}
 			//discount on stock - onHand
 			inv.setOnHand(inv.getOnHand() - c.getQuantity());
 			
@@ -90,7 +95,7 @@ public class OrderServiceImpl implements IOrderService{
 		order.setTotal(total);
 
 		// Once the order is persists the save method updates that order with the OrderItem feed it by the cartItem
-		//second save — UPDATE total + INSERT order_items on cascade
+		//second save — UPDATE total + INSERT order_items on cascade and includes the real product price
 	    return Mapper.createOrderResponse(orderRepo.save(order));
 	}
 
@@ -115,7 +120,20 @@ public class OrderServiceImpl implements IOrderService{
 		Order order = orderRepo.findByIdAndStoreId(orderId, storeId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order not found!")) ;
 		
+		
 		return Mapper.toDetail(order);
+	}
+
+	@Transactional
+	@Override
+	public OrderSummaryResponseDTO cancel(Long orderId, Long storeId) {
+		// TODO Auto-generated method stub
+		Order order = orderRepo.findByIdAndStoreId(orderId, storeId)
+				.orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
+		
+		order.setOrderStatus(OrderStatus.CANCEL.name());
+		
+		return Mapper.toSummaryDTO(orderRepo.save(order));
 	}
 		
 //		cart.stream().forEach(c -> {

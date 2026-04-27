@@ -11,6 +11,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 
 import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.OutOfStockException;
+import com.stockflow.backend.exception.ProductNotAvailableException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 
 import java.time.Instant;
@@ -20,7 +21,17 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+	
+	@ExceptionHandler(ProductNotAvailableException.class)
+	public ResponseEntity<Map<String, Object>> handleProductNotAvailable(ProductNotAvailableException ex) {
+	    return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+	            "timestamp", Instant.now().toString(),
+	            "status", 409,
+	            "error", "Conflict",
+	            "message", ex.getMessage()
+	    ));
+	}
+	
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(

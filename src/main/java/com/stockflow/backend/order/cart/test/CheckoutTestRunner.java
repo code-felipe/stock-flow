@@ -33,28 +33,28 @@ public class CheckoutTestRunner implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 
 		
-		StoreSummaryDTO store = storeService.findById(1L);
-		
-		List<CartItemRequest> cart = List.of(
-				CartItemRequest.builder()
-//				.storeId(store.getId())
-//				.productName("Churros de arequipe")
-				.productId(2L)
-//				.unitPrice(10.00)
-				.quantity(3)
-				.build(),
-				
-				CartItemRequest.builder()
-//				.storeId(store.getId())
-//				.productName("Churro de queso")
-				.productId(1L)
-//				.unitPrice(12.40)
-				.quantity(30)
-				.build()
-				);
-				
-		OrderCreateResponsetDTO response = orderService.checkout(cart, Mapper.summaryEntity(store));
-		System.out.println(response);
+//		StoreSummaryDTO store = storeService.findById(1L);
+//		
+//		List<CartItemRequest> cart = List.of(
+////				CartItemRequest.builder()
+//////				.storeId(store.getId())
+//////				.productName("Churros de arequipe")
+////				.productId(2L)
+//////				.unitPrice(10.00)
+////				.quantity(3)
+////				.build(),
+//				
+//				CartItemRequest.builder()
+////				.storeId(store.getId())
+////				.productName("Churro de queso")
+//				.productId(1L)
+////				.unitPrice(12.40)
+//				.quantity(30)
+//				.build()
+//				);
+//				
+//		OrderCreateResponsetDTO response = orderService.checkout(cart, Mapper.summaryEntity(store));
+//		System.out.println(response);
 				
 	}
 

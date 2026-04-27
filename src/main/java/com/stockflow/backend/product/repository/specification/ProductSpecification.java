@@ -77,9 +77,9 @@ public class ProductSpecification {
     public static Specification<Product> isActive(Boolean active) {
         return (root, query, cb) -> {
             if (active == null) {
-                return cb.isTrue(root.get("active"));
+                return null; // without filter brings all regards if is active or no
             }
-            return cb.equal(root.get("active"), active);
+            return cb.equal(root.get("active"), active);// brings is active = false o true
         };
     }
 
