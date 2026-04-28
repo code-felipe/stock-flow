@@ -30,6 +30,20 @@ The domain model is designed to reflect a realistic catalog/inventory structure 
 
 ---
 
+## Database Schema - Entity Relationship Diagram (ERD)
+
+The following diagram represents the current database schema generated 
+from the live MySQL instance. It reflects the implemented entities and 
+their relationships as of the current development phase.
+> Note: The schema reflects the current implementation phase. 
+> Some modules such as CartItem (session-based) are not represented 
+> as they do not persist in the database.
+
+![UML diagram](docs/diagrams/stock-flow-db-design.svg)
+
+
+---
+
 ## Package Structure
 
 ```text
