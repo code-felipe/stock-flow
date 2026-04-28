@@ -43,6 +43,20 @@ com.stockflow.backend/
 │   ├── repository/
 │   └── service/
 │
+├── order/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/
+│
+├── orderItem/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/│
+│
 └── utils/
     └── mapper/
 ```
@@ -138,5 +152,7 @@ ProductDetailDTO productDTO = productService.findById(productId);
 | `Product` | Core sellable item with attributes and category reference |
 | `Inventory` | Stock levels and availability per product/store |
 | `Store` | Physical or logical location holding inventory |
+| `Order` | Sales transaction linking a user and store to a set of purchased items |
+| `OrderItem` | Individual line item within an order, capturing a price and quantity snapshot at the time of purchase |
 
 ---
