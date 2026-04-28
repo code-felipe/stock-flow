@@ -1,8 +1,21 @@
 # StockFlow API
 
-StockFlow is a REST API for managing product catalogs and inventory.
+StockFlow is a REST API designed for multi-store inventory and sales management.
 
-It provides a structured backend service that supports product lifecycle management, search, and stock tracking — similar to the backend needs of small to mid-size e-commerce systems.
+It provides a structured backend that covers the full operational cycle of a 
+retail business: product catalog management, stock tracking per store, order 
+processing, and payment record-keeping — all secured with role-based authentication.
+
+Key capabilities include:
+
+- Product & category management with soft deletion and SKU control
+- Multi-store inventory tracking, decoupled from the product catalog
+- Order lifecycle management: from cart to fulfillment, cancellation, and stock restoration
+- Payment record-keeping (internal tracking only, no payment gateway integration)
+- Role-based access control for admin and user operations
+- Dynamic filtering and pagination across products and inventories
+- Sales statistics and performance metrics (upcoming)
+- Order and sales report generation (upcoming)
 
 ---
 
