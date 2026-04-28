@@ -9,10 +9,13 @@ It provides a structured backend service that supports product lifecycle managem
 ## Core Features
 
 - Product management (CRUD): [Product CRUD module details](docs/product-crud-module.md)
+- Inventory management (CRUD): [Inventory CRUD module details](docs/inventory-crud-module.md)
+- Order management (CRUD): [Order CRUD module details](docs/order-crud-module.md)
 - Inventory tracking per product
 - Soft deletion to preserve historical data
 - Pagination and sorting for large datasets
-- Dynamic product filtering (price, stock, name, SKU): [Product Filter module details](docs/product-filter-module.md)
+- Dynamic product filtering (price, stock, name, SKU, category, ranges): [Product Filter module details](docs/product-filter-module.md)
+- Dynamic store/inventory filtering (price, stock, name, SKU, category, onHand, reserved, ranges): [Inventory Filter module details](docs/inventory-filter-module.md)
 - RESTful API design with clear resource modeling
 - Input validation and centralized exception handling
 - Architecture - Package by Feature - [Architecture details](docs/architecture.md)
