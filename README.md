@@ -77,6 +77,20 @@ com.stockflow.backend/
 │   ├── repository/
 │   └── service/
 │
+├── order/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/
+│
+├── orderItem/
+│   ├── controller/
+│   ├── domain/
+│   ├── dto/
+│   ├── repository/
+│   └── service/│
+│
 └── utils/
     └── mapper/
 ```
