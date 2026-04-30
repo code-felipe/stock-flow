@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,18 +38,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin/products")
-@Tag(name = "Products", description = "Endpoints for product catalog and inventory")
+@Tag(name = "Products", description = "Endpoints for product catalog")
 public class ProductRestController {
 
     @Autowired
     private IProductService productService;
-
+    
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     @Operation(
             summary = "Get products",
             description = "Paginated product list with optional name search; sorted by createdAt (desc)."
     )
-    public ResponseEntity<Page<ProductSummaryDTO>> list(
+    public ResponseEntity<Map<String, Object>> list(
     		@ModelAttribute ProductFilter filter,
             @Parameter(description = "Global search box (free-text). By default, it searches product name (case-insensitive, partial match). If 'name' is provided in ProductFilter, it takes precedence.", example = "ring")
             @RequestParam(required = false) String search,
@@ -65,23 +67,25 @@ public class ProductRestController {
     	
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         
+        // Specification is now in use.
+        Page<ProductSummaryDTO> result = productService.findProducts(filter, pageable);
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("messsage", "All products were successfully fetched");
+        body.put("products", result);
+        
         if (search != null && !search.isBlank() && (filter.getName() == null || filter.getName().isBlank())) {
             filter.setName(search);
         }
         if(category != null && !category.isBlank() && (filter.getCategory() == null || filter.getCategory().isBlank())) {
         	filter.setCategory(category);
-        }
+        }        
 
-        // Specification is now in use.
-        Page<ProductSummaryDTO> result = productService.findProducts(filter, pageable);
-
-        return ResponseEntity.ok()
-            .header("X-Fields-Excluded", "categoryIds")
-            .header("X-Note", "Products have categories, but categoryIds are not returned by this endpoint. Use /api/products/{id} for details.")
-            .body(result);
+        return ResponseEntity.ok(body);
     }
     
     
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     @Operation(
             summary = "Get product by id",
@@ -100,6 +104,7 @@ public class ProductRestController {
         return ResponseEntity.ok().body(body);
     }
     
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(summary = "Create product", description = "Create a new product")
     public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductCreateRequestDTO dto) {
@@ -117,6 +122,7 @@ public class ProductRestController {
 
     
     // Soft-deletion
+//    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/discontinue")
     @Operation(
             summary = "Discontinue product",
@@ -135,6 +141,7 @@ public class ProductRestController {
     }
     
     // Restauration
+//    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/restore")
     @Operation(
             summary = "Restore product",
@@ -150,6 +157,7 @@ public class ProductRestController {
         return ResponseEntity.ok().body(body);
     }
     
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(
             summary = "Edit product",
