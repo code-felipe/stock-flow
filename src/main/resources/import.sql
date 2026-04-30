@@ -9,3 +9,12 @@ INSERT INTO stores(name, description, address, created_at)VALUES('My Jewerly Sto
 INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,1,150,20,'2026-01-27', '2026-02-27');
 INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,2,300,10,'2026-02-16', '2026-02-27');
 
+INSERT INTO roles (authority) VALUES ('ROLE_USER');
+INSERT INTO roles (authority) VALUES ('ROLE_ADMIN');
+
+INSERT INTO users (username, password, enabled) VALUES ('andres','$2a$10$TWxv618Gpc/6pCiGM/8D2.PZpuFS4Xacu7g75UcLxCfxemFo68Upu',1);
+INSERT INTO users (username, password, enabled) VALUES ('admin','$2a$10$TWxv618Gpc/6pCiGM/8D2.PZpuFS4Xacu7g75UcLxCfxemFo68Upu',1);
+
+INSERT INTO user_roles (user_id, role_id) VALUES (1, 1);
+INSERT INTO user_roles (user_id, role_id) VALUES (2, 1);
+INSERT INTO user_roles (user_id, role_id) VALUES (2, 2);
