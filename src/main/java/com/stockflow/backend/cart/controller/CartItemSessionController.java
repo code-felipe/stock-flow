@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,8 +64,28 @@ public class CartItemSessionController {
 	    List<CartItemRequest> items = cartService.getCart(user.getId());
 
 	    Map<String, Object> body = new HashMap<>();
-	    body.put("cart", items);
+	    body.put("cart", items);//cart: [] easy for the front end - no error message
 
+	    return ResponseEntity.ok(body);
+	}
+	
+	
+	@DeleteMapping("/{productId}")
+	public ResponseEntity<Map<String, Object>> removeCart(
+	        @AuthenticationPrincipal String username,
+	        @PathVariable Long productId) {
+
+	    User user = userRepo.findByUsername(username)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+	    CartItemRequest item = cartService.remove(user.getId(), productId);
+
+	    if (item == null) {
+	        return ResponseEntity.notFound().build(); // 404 en lugar de {"cart": null}
+	    }
+
+	    Map<String, Object> body = new HashMap<>();
+	    body.put("cart", item);
 	    return ResponseEntity.ok(body);
 	}
 	
