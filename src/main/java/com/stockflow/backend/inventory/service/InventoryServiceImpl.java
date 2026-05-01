@@ -25,6 +25,7 @@ import com.stockflow.backend.inventory.dto.update.InventoryUpdateRequestDTO;
 import com.stockflow.backend.inventory.dto.update.InventoryUpdateResponseDTO;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.product.domain.Product;
+import com.stockflow.backend.product.dto.ProductClientFilter;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.detail.ProductDetailDTO;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
@@ -61,27 +62,43 @@ public class InventoryServiceImpl implements IInventoryService{
 	private IStoreService storeService;
 
 	// uses specification
-	@Override
-	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductFilter filter, Pageable pageable) {
-		// TODO Auto-generated method stub
-		Specification<Product> spec =
-		        Specification.where(ProductStockSpecification.forStore(storeId, filter.getMinStock(), filter.getMaxStock()))
-		            .and(ProductStockSpecification.nameContains(filter.getName()))
-		            .and(ProductStockSpecification.hasCategory(filter.getCategory()))
-		            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
-		            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
-
-		Page<Product> page = productRepo.findAll(spec, pageable);// needs to use productService
-		
-		return page.map(product -> {
-	        // busca el inventory de este producto para este store específico
+	private Page<ProductStockDTO> mapToStockDTO(Page<Product> page, Long storeId) {
+	    return page.map(product -> {
 	        Inventory inv = product.getInventories().stream()
 	            .filter(i -> i.getId().getStoreId().equals(storeId))
 	            .findFirst()
 	            .orElse(null);
-	        
 	        return Mapper.toSummaryDTO(product, inv);
-	        });
+	    });
+	}
+
+	// Admin
+	@Override
+	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductFilter filter, Pageable pageable) {
+	    Specification<Product> spec =
+	        Specification.where(ProductStockSpecification.forStore(storeId, filter.getMinStock(), filter.getMaxStock()))
+	            .and(ProductStockSpecification.nameContains(filter.getName()))
+	            .and(ProductStockSpecification.isActive(filter.getActive()))
+	            .and(ProductStockSpecification.hasSku(filter.getSku()))
+	            .and(ProductStockSpecification.hasCategory(filter.getCategory()))
+	            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
+	            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
+
+	    return mapToStockDTO(productRepo.findAll(spec, pageable), storeId);
+	}
+
+	// Client
+	@Override
+	public Page<ProductStockDTO> findStockByStore(Long storeId, ProductClientFilter filter, Pageable pageable) {
+	    Specification<Product> spec =
+	        Specification.where(ProductStockSpecification.forStore(storeId, filter.getMinStock(), filter.getMaxStock()))
+	            .and(ProductStockSpecification.nameContains(filter.getName()))
+	            .and(ProductStockSpecification.isActive(Boolean.TRUE)) // siempre activos
+	            .and(ProductStockSpecification.hasCategory(filter.getCategory()))
+	            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
+	            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
+
+	    return mapToStockDTO(productRepo.findAll(spec, pageable), storeId);
 	}
 
 
@@ -172,5 +189,8 @@ public class InventoryServiceImpl implements IInventoryService{
 		
 		return inv;
 	}
+
+
+
 
 }
