@@ -10,14 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.stockflow.backend.cart.dto.CartItemRequest;
+import com.stockflow.backend.cart.dto.CartItemResponse;
 import com.stockflow.backend.exception.OutOfStockException;
 import com.stockflow.backend.exception.ProductNotAvailableException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.repository.IInventoryRepository;
 import com.stockflow.backend.inventory.service.IInventoryService;
-import com.stockflow.backend.order.cart.CartItemRequest;
-import com.stockflow.backend.order.cart.CartItemResponse;
 import com.stockflow.backend.order.domain.Order;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;

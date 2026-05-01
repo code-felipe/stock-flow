@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.stockflow.backend.order.cart.CartItemRequest;
+import com.stockflow.backend.cart.dto.CartItemRequest;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;

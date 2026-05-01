@@ -23,13 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stockflow.backend.cart.service.ICartItemService;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
 import com.stockflow.backend.inventory.service.IInventoryService;
-import com.stockflow.backend.order.cart.CartItemRequest;
-import com.stockflow.backend.order.cart.CartItemResponse;
-import com.stockflow.backend.order.cart.service.ICartItemService;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
