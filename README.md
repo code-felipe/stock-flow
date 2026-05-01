@@ -86,6 +86,7 @@ Flow:
 - [Order module details](docs/order-crud-module.md)
 - [Product Filter module details](docs/product-filter-module.md)
 - [Inventory Filter module details](docs/inventory-filter-module.md)
+- [CartItem Session module details](docs/cart-module.md)
 - [Spring Security - JWT](docs/JWT-module.md)
 - [Architecture details](docs/architecture.md)
 
