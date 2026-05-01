@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 import com.stockflow.backend.cart.dto.CartItemRequest;
 import com.stockflow.backend.exception.CartEmptyException;
 
-
-
 @Service
 public class CartItemServiceImpl implements ICartItemService {
 	
-	
+	// 			user id - product id - cart
 	private Map<Long, Map<Long, CartItemRequest>> cart = new HashMap<>();
 	
 	@Override
@@ -45,15 +43,8 @@ public class CartItemServiceImpl implements ICartItemService {
 
 	@Override
 	public List<CartItemRequest> getCart(Long userId) {
-		// TODO Auto-generated method stub
-//		Map<Long, CartItemRequest> innerMap = cart.get(userId);
-		Map<Long, CartItemRequest> innerMap = this.getOrCreateCart(userId);
-		
-		if(innerMap == null || innerMap.isEmpty()) {
-		    throw new CartEmptyException("Cart is empty");
-		}
-		
-		return new ArrayList<>(innerMap.values());
+	    Map<Long, CartItemRequest> innerMap = this.getOrCreateCart(userId);
+	    return new ArrayList<>(innerMap.values()); // retorna [] si está vacío - the front end does not need error message here.
 	}
 
 	@Override
@@ -61,11 +52,21 @@ public class CartItemServiceImpl implements ICartItemService {
 		// TODO Auto-generated method stub
 		Map<Long, CartItemRequest> innerMap = cart.get(userId);
 		innerMap.values().clear();
-		cart.put(userId, innerMap);
-		
-		
+		cart.put(userId, innerMap);		
 	}
 	
+	@Override
+	public CartItemRequest remove(Long userId, Long productId) {
+	    Map<Long, CartItemRequest> innerMap = cart.get(userId);
+
+	    if (innerMap == null || innerMap.isEmpty()) {
+	        return null; // cart does no exists or is empty
+	    }
+
+	    return innerMap.remove(productId); //item or null if did not existed
+	}
+	
+
 	//Helpers
 	private  List<CartItemRequest> mergeItems(Long userId, List<CartItemRequest> carts){
 		
@@ -95,5 +96,6 @@ public class CartItemServiceImpl implements ICartItemService {
 	    
 	    return innerMap;
 	}
+
 
 }
