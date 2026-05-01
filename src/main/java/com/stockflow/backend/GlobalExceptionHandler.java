@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
+import com.stockflow.backend.exception.CartEmptyException;
 import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.OutOfStockException;
 import com.stockflow.backend.exception.ProductNotAvailableException;
@@ -149,6 +150,14 @@ public class GlobalExceptionHandler {
                 "error", "Bad Request",
                 "message", "Validation failed",
                 "errors", errors
+        ));
+    }
+    
+    @ExceptionHandler(CartEmptyException.class)
+    public ResponseEntity<Map<String, Object>> handleEmptyCart(CartEmptyException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+            "status", 404,
+            "message", ex.getMessage()
         ));
     }
 }
