@@ -53,9 +53,9 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/api/login").permitAll()
-                .anyRequest().permitAll()//without auth
-//                .requestMatchers("/api/admin/**").authenticated()//with auth
-//                .anyRequest().authenticated()//with auth
+//                .anyRequest().permitAll()//without auth
+                .requestMatchers("/api/admin/**").authenticated()//with auth
+                .anyRequest().authenticated()//with authw
             )
         	.exceptionHandling(ex -> ex
             	.accessDeniedHandler(accessDeniedHandler())//Sends an exception for non-authorizate user
