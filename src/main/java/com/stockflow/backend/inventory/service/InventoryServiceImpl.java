@@ -93,7 +93,7 @@ public class InventoryServiceImpl implements IInventoryService{
 	    Specification<Product> spec =
 	        Specification.where(ProductStockSpecification.forStore(storeId, filter.getMinStock(), filter.getMaxStock()))
 	            .and(ProductStockSpecification.nameContains(filter.getName()))
-	            .and(ProductStockSpecification.isActive(Boolean.TRUE)) // siempre activos
+	            .and(ProductStockSpecification.isActive(Boolean.TRUE)) // Always active
 	            .and(ProductStockSpecification.hasCategory(filter.getCategory()))
 	            .and(ProductStockSpecification.minPrice(filter.getMinPrice()))
 	            .and(ProductStockSpecification.maxPrice(filter.getMaxPrice()));
