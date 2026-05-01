@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,11 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.inventory.domain.Inventory;
 import com.stockflow.backend.inventory.domain.InventoryId;
 import com.stockflow.backend.inventory.service.IInventoryService;
 import com.stockflow.backend.order.cart.CartItemRequest;
 import com.stockflow.backend.order.cart.CartItemResponse;
+import com.stockflow.backend.order.cart.service.ICartItemService;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
@@ -36,6 +39,8 @@ import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
 import com.stockflow.backend.store.dto.StoreSummaryDTO;
 import com.stockflow.backend.store.service.IStoreService;
+import com.stockflow.backend.user.domain.User;
+import com.stockflow.backend.user.repository.IUserRepository;
 import com.stockflow.backend.utils.mapper.Mapper;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,6 +57,12 @@ public class OrderController {
 	
 	@Autowired
 	private IOrderService orderService;
+	
+	@Autowired
+	private ICartItemService cartService;
+	
+	@Autowired
+	private IUserRepository userRepo;
 	
 	
 	@GetMapping("/{storeId}/orders")
@@ -76,16 +87,21 @@ public class OrderController {
 	public ResponseEntity<Map<String, Object>> checkout(
 			@Parameter(description = "Store id", example = "1")
 	        @PathVariable Long storeId,
-	        @Valid @RequestBody List<@Valid CartItemRequest> carts
+	        @AuthenticationPrincipal String username
+//	        @Valid @RequestBody List<@Valid CartItemRequest> carts
 			){
-		 	
+		
 		StoreSummaryDTO store = storeService.findById(storeId);
+		User user = userRepo.findByUsername(username)
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 		 		 
-		OrderCreateResponsetDTO created = orderService.checkout(carts, Mapper.summaryEntity(store));
+		OrderCreateResponsetDTO created = orderService.checkout(cartService.getCart(user.getId()), Mapper.summaryEntity(store));
+		cartService.clearCart(user.getId());//clear cart after checkout
+		
 		Map<String, Object> body = new HashMap<>();
 		body.put("message", "Order created successfully");
 		body.put("order", created);
-		 
+		
 		return ResponseEntity
 				.created(URI.create("/api/admin/store/"+store.getId()+"/order"))
 				.body(body);
