@@ -1,8 +1,10 @@
-package com.stockflow.backend.order.cart.service;
+package com.stockflow.backend.cart.service;
 
 import java.util.List;
 
-import com.stockflow.backend.order.cart.CartItemRequest;
+import com.stockflow.backend.cart.dto.CartItemRequest;
+
+
 
 
 public interface ICartItemService {

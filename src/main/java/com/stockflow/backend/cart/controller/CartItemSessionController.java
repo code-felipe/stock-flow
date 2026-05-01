@@ -1,4 +1,4 @@
-package com.stockflow.backend.order.cart.controller;
+package com.stockflow.backend.cart.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stockflow.backend.cart.dto.CartItemRequest;
+import com.stockflow.backend.cart.service.ICartItemService;
 import com.stockflow.backend.exception.ResourceNotFoundException;
-import com.stockflow.backend.order.cart.CartItemRequest;
-import com.stockflow.backend.order.cart.service.ICartItemService;
 import com.stockflow.backend.user.domain.User;
 import com.stockflow.backend.user.repository.IUserRepository;
 

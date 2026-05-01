@@ -1,4 +1,4 @@
-package com.stockflow.backend.order.cart.service;
+package com.stockflow.backend.cart.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.stockflow.backend.cart.dto.CartItemRequest;
 import com.stockflow.backend.exception.CartEmptyException;
-import com.stockflow.backend.order.cart.CartItemRequest;
+
 
 
 @Service

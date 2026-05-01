@@ -1,4 +1,4 @@
-package com.stockflow.backend.order.cart.test;
+package com.stockflow.backend.cart.test;
 
 import java.util.List;
 
@@ -6,17 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.stockflow.backend.inventory.domain.Inventory;
-import com.stockflow.backend.inventory.domain.InventoryId;
-import com.stockflow.backend.inventory.repository.IInventoryRepository;
-import com.stockflow.backend.inventory.service.IInventoryService;
-import com.stockflow.backend.order.cart.CartItemRequest;
-import com.stockflow.backend.order.cart.CartItemResponse;
-import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.service.IOrderService;
-import com.stockflow.backend.store.dto.StoreSummaryDTO;
+
 import com.stockflow.backend.store.service.IStoreService;
-import com.stockflow.backend.utils.mapper.Mapper;
+
 
 
 @Component
