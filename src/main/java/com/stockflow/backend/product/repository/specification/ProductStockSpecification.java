@@ -71,4 +71,21 @@ public class ProductStockSpecification {
         };
     }
     
+    public static Specification<Product>isActive(Boolean active){
+    	return(root, query, cb) -> {
+    		if(active == null)return null;
+    		return cb.equal(root.get("active"), active);
+    	};
+    }
+    
+    public static Specification<Product> hasSku(String sku) {
+        return (root, query, cb) -> {
+            if (sku == null || sku.isBlank()) return null;
+            return cb.equal(
+                    cb.lower(root.get("sku")),
+                    sku.trim().toLowerCase()
+            );
+        };
+    }
+    
 }
