@@ -60,8 +60,8 @@ public class SpringSecurityConfig {
         	.exceptionHandling(ex -> ex
             	.accessDeniedHandler(accessDeniedHandler())//Sends an exception for non-authorizate user
             		)
-            .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
-            .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))//with auth
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))//with auth
             .csrf(config -> config.disable())
             .sessionManagement(management -> management
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
