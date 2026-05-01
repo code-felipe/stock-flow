@@ -41,11 +41,16 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
             authentication = new UsernamePasswordAuthenticationToken(
                 jwtService.getUsername(header), null, jwtService.getRoles(header));
         }
-        // ✅ agrega esto
+  
         System.out.println("Roles cargados: " + authentication.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("Authentication seteado: " + 
+        	    SecurityContextHolder.getContext().getAuthentication());
         chain.doFilter(request, response);
+        System.out.println("Header recibido: " + header);
+        System.out.println("Requiere auth: " + requiresAuthentication(header));
+        System.out.println("Token válido: " + jwtService.validate(header));
     }
 
     protected boolean requiresAuthentication(String header) {
