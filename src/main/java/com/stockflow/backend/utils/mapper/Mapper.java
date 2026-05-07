@@ -16,6 +16,7 @@ import com.stockflow.backend.order.domain.Order;
 import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
+import com.stockflow.backend.order.enumerate.OrderStatus;
 import com.stockflow.backend.orderItem.domain.OrderItem;
 import com.stockflow.backend.orderItem.dto.create.OrderItemResponseDTO;
 import com.stockflow.backend.product.domain.Product;
@@ -212,7 +213,7 @@ public class Mapper {
 	
 	public static OrderCreateResponsetDTO createOrderResponse(Order order) {
 		return OrderCreateResponsetDTO.builder()
-				.orderStatus(order.getOrderStatus())
+				.orderStatus(order.getOrderStatus().name())
 				.total(order.getTotal())
 				.storeName(order.getStore().getName())
 				.storeAddress(order.getStore().getAddress())
@@ -224,7 +225,7 @@ public class Mapper {
 	public static OrderSummaryResponseDTO toSummaryDTO(Order order) {
 		return OrderSummaryResponseDTO.builder()
 				.id(order.getId())
-				.orderStatus(order.getOrderStatus())
+				.orderStatus(order.getOrderStatus().name())
 				.orderDate(order.getOrderDate())
 				.total(order.getTotal())
 				.storeName(order.getStore().getName())
@@ -236,7 +237,7 @@ public class Mapper {
 	public static OrderDetailedResponseDTO toDetail(Order order) {
 		return OrderDetailedResponseDTO.builder()
 				.id(order.getId())
-				.orderStatus(order.getOrderStatus())
+				.orderStatus(order.getOrderStatus().name())
 				.orderDate(order.getOrderDate())
 				.total(order.getTotal())
 				.storeName(order.getStore().getName())

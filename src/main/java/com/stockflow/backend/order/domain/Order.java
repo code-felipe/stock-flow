@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.inventory.domain.Inventory;
+import com.stockflow.backend.order.enumerate.OrderStatus;
 import com.stockflow.backend.orderItem.domain.OrderItem;
 import com.stockflow.backend.product.domain.Product;
 import com.stockflow.backend.store.domain.Store;
@@ -15,6 +16,8 @@ import com.stockflow.backend.store.domain.Store;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,8 +47,9 @@ public class Order {
 	@Column(name = "order_date")
 	private Instant orderDate;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "order_status")
-	private String orderStatus;
+    private OrderStatus orderStatus;
 	
 	private Double total;
 	

@@ -52,7 +52,7 @@ public class OrderServiceImpl implements IOrderService{
 		order.setOrderDate(Instant.now());
 		//Example to test the dateFrom dateTo: needs to deactivate prePersists()
 		//order.setOrderDate(Instant.parse("2026-02-10T14:00:00Z"));
-		order.setOrderStatus(OrderStatus.CONFIRM.name());
+		order.setOrderStatus(OrderStatus.CONFIRMED);
 		order.setStore(store);
 		order.setTotal(0.0);
 		
@@ -131,7 +131,7 @@ public class OrderServiceImpl implements IOrderService{
 		Order order = orderRepo.findByIdAndStoreId(orderId, storeId)
 				.orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
 		
-		order.setOrderStatus(OrderStatus.CANCEL.name());
+		order.setOrderStatus(OrderStatus.CANCELLED);
 		
 		return Mapper.toSummaryDTO(orderRepo.save(order));
 	}
