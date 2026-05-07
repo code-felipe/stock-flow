@@ -135,6 +135,23 @@ public class OrderServiceImpl implements IOrderService{
 		
 		return Mapper.toSummaryDTO(orderRepo.save(order));
 	}
+
+	@Transactional
+	@Override
+	public OrderSummaryResponseDTO updateStatus(Long orderId, Long storeId, OrderStatus status) {
+		// TODO Auto-generated method stub
+		Order order = orderRepo.findByIdAndStoreId(orderId, storeId)
+				.orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
+		
+		if (!order.getOrderStatus().canTransitionTo(status)) {
+	        throw new IllegalStateException(
+	            "Cannot transition from " + order.getOrderStatus() + " to " + status
+	        );
+	    }
+		
+		order.setOrderStatus(status);
+		return Mapper.toSummaryDTO(orderRepo.save(order));
+	}
 		
 //		cart.stream().forEach(c -> {
 //			c.setStoreId(store.getId());

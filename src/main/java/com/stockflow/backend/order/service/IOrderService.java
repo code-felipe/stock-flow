@@ -10,6 +10,7 @@ import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
+import com.stockflow.backend.order.enumerate.OrderStatus;
 import com.stockflow.backend.store.domain.Store;
 
 public interface IOrderService {
@@ -18,5 +19,6 @@ public interface IOrderService {
 	public Page<OrderSummaryResponseDTO> findAllOrdersByStoreId(Long storeId, OrderFilter filter,  Pageable pageable);
 	public OrderDetailedResponseDTO orderDetail(Long orderId, Long storeId);
 	public OrderSummaryResponseDTO cancel(Long orderId, Long storeId);
+	public OrderSummaryResponseDTO updateStatus(Long orderId, Long storeId, OrderStatus status);
 
 }

@@ -32,6 +32,8 @@ import com.stockflow.backend.order.dto.create.OrderCreateResponsetDTO;
 import com.stockflow.backend.order.dto.filter.OrderFilter;
 import com.stockflow.backend.order.dto.summary.OrderDetailedResponseDTO;
 import com.stockflow.backend.order.dto.summary.OrderSummaryResponseDTO;
+import com.stockflow.backend.order.enumerate.OrderStatus;
+import com.stockflow.backend.order.enumerate.OrderStatusRequestDTO;
 import com.stockflow.backend.order.service.IOrderService;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.summary.ProductStockDTO;
@@ -135,6 +137,24 @@ public class OrderController {
 	    body.put("message", "Order have been successfully canceled");
 	    body.put("order", order);
 
+	    return ResponseEntity.ok(body);
+	}
+	
+	@PatchMapping("/{storeId}/order/{orderId}/status")
+	public ResponseEntity<Map<String, Object>> updateStatus(
+			@Parameter(description = "store id", example = "1")
+	        @PathVariable Long storeId,
+	        @Parameter(description = "order id", example = "2")
+	        @PathVariable Long orderId,
+	        @RequestParam OrderStatus status) {
+		
+
+		
+		OrderSummaryResponseDTO order = orderService.updateStatus(orderId, storeId, status);
+		Map<String, Object> body = new HashMap<>();
+		body.put("message", "The order has been moved to " + order.getOrderStatus());
+	    body.put("order", order);
+		
 	    return ResponseEntity.ok(body);
 	}
 	
