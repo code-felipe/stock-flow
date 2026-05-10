@@ -1,5 +1,7 @@
 package com.stockflow.backend.product.controller;
 
+import com.stockflow.backend.auditlog.enumerate.AuditAction;
+import com.stockflow.backend.auditlog.service.IAuditLogService;
 import com.stockflow.backend.product.dto.ProductFilter;
 import com.stockflow.backend.product.dto.create.ProductCreateRequestDTO;
 import com.stockflow.backend.product.dto.create.ProductCreateResponseDTO;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import java.net.URI;
@@ -25,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,6 +47,9 @@ public class ProductRestController {
 
     @Autowired
     private IProductService productService;
+    
+    @Autowired
+    private IAuditLogService auditService;
     
 //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
@@ -107,10 +114,18 @@ public class ProductRestController {
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(summary = "Create product", description = "Create a new product")
-    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody ProductCreateRequestDTO dto) {
+    public ResponseEntity<Map<String, Object>> createProduct(
+    		@Valid @RequestBody ProductCreateRequestDTO dto,
+    		HttpServletRequest request,
+    		Authentication auth
+    		) {
 
     	ProductCreateResponseDTO created = productService.createProduct(dto);
-
+    	
+    	// Audit
+    	auditService.saveAudit(auth, request, AuditAction.CREATE, "Product", created.getId(), created, null, 201);
+    	System.out.println(auth.getName());
+    	System.out.println(request.getMethod());
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Product created successfully");
         body.put("product", created);
