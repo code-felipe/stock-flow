@@ -36,7 +36,7 @@ public class CartItemResponse {
 	private Integer quantity;
 	
 	// Present data
-	public Double subTotal() {
+	public Double getSubTotal() {
 		return this.unitPrice * this.quantity;
 	}
 }

@@ -1,20 +1,33 @@
 package com.stockflow.backend.cart.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.stockflow.backend.cart.dto.CartItemRequest;
+import com.stockflow.backend.cart.dto.CartItemResponse;
+import com.stockflow.backend.cart.dto.CartResponse;
 import com.stockflow.backend.exception.CartEmptyException;
+import com.stockflow.backend.product.domain.Product;
+import com.stockflow.backend.product.dto.summary.ProductSummaryDTO;
+import com.stockflow.backend.product.repository.IProductRepository;
 
 @Service
 public class CartItemServiceImpl implements ICartItemService {
 	
 	// 			user id - product id - cart
 	private Map<Long, Map<Long, CartItemRequest>> cart = new HashMap<>();
+	
+	@Autowired
+	private IProductRepository productRepo;
 	
 	@Override
 	public List<CartItemRequest> addToCart(Long userId, List<CartItemRequest> carts) {
@@ -45,6 +58,42 @@ public class CartItemServiceImpl implements ICartItemService {
 	public List<CartItemRequest> getCart(Long userId) {
 	    Map<Long, CartItemRequest> innerMap = this.getOrCreateCart(userId);
 	    return new ArrayList<>(innerMap.values()); // retorna [] si está vacío - the front end does not need error message here.
+	}
+	
+	@Override
+	public CartResponse cartDetail(Long userId) {
+
+	    Map<Long, CartItemRequest> innerMap = this.getOrCreateCart(userId);
+	 
+	    Set<Long> productIds = innerMap.values().stream()
+	            .map(CartItemRequest::getProductId)
+	            .filter(Objects::nonNull)
+	            .collect(Collectors.toSet());
+
+	    List<Product> products = productRepo.findAllById(productIds);
+
+	    List<CartItemResponse> cartItems = products.stream()
+	            .map(product -> {
+
+	                CartItemRequest cartItem = innerMap.get(product.getId());
+	                
+	                return CartItemResponse.builder()
+	                		.productId(cartItem.getProductId())
+	                		.productName(product.getName())
+	                		.unitPrice(product.getPrice())
+	                		.quantity(cartItem.getQuantity())
+	                		.build();
+
+	            })
+	            .toList();
+	    Double total = cartItems.stream()
+	    		.mapToDouble(CartItemResponse::getSubTotal)
+	    		.sum();
+	    
+	    return CartResponse.builder()
+	    		.items(cartItems)
+	    		.total(total)
+	    		.build();
 	}
 
 	@Override
@@ -96,6 +145,8 @@ public class CartItemServiceImpl implements ICartItemService {
 	    
 	    return innerMap;
 	}
+
+
 
 
 }

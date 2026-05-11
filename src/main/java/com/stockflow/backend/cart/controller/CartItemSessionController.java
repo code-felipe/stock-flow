@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stockflow.backend.cart.dto.CartItemRequest;
+import com.stockflow.backend.cart.dto.CartItemResponse;
+import com.stockflow.backend.cart.dto.CartResponse;
 import com.stockflow.backend.cart.service.ICartItemService;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 import com.stockflow.backend.user.domain.User;
@@ -62,6 +64,21 @@ public class CartItemSessionController {
 	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 	    List<CartItemRequest> items = cartService.getCart(user.getId());
+
+	    Map<String, Object> body = new HashMap<>();
+	    body.put("cart", items);//cart: [] easy for the front end - no error message
+
+	    return ResponseEntity.ok(body);
+	}
+	
+	@GetMapping("/detail")
+	public ResponseEntity<Map<String, Object>> cartDetail(
+	        @AuthenticationPrincipal String username) {
+
+	    User user = userRepo.findByUsername(username)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+	    CartResponse items = cartService.cartDetail(user.getId());
 
 	    Map<String, Object> body = new HashMap<>();
 	    body.put("cart", items);//cart: [] easy for the front end - no error message
