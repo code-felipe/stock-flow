@@ -1,4 +1,4 @@
-package com.stockflow.backend.auditlog.dto;
+package com.stockflow.backend.auditlog.dto.summary;
 
 import java.time.Instant;
 import java.util.Set;

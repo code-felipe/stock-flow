@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.stockflow.backend.auditlog.domain.AuditLog;
-import com.stockflow.backend.auditlog.dto.AuditLogResponseDTO;
+import com.stockflow.backend.auditlog.dto.summary.AuditLogResponseDTO;
 import com.stockflow.backend.category.domain.Category;
 import com.stockflow.backend.category.dto.CategoryDTO;
 import com.stockflow.backend.inventory.domain.Inventory;
@@ -263,7 +263,7 @@ public class Mapper {
 	}
 	
 	//=== AuditLog ===
-	public static AuditLogResponseDTO createAuditLog(AuditLog audit) {
+	public static AuditLogResponseDTO from(AuditLog audit) {
 		return AuditLogResponseDTO.builder()
 				.userId(audit.getUserId())
 				.performBy(audit.getPerformBy())
@@ -280,4 +280,6 @@ public class Mapper {
 				.errorMessage(audit.getErrorMessage())
 				.build();
 	}
+	
+	
 }

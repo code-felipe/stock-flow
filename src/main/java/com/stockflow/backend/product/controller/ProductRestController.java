@@ -124,8 +124,7 @@ public class ProductRestController {
     	
     	// Audit
     	auditService.saveAudit(auth, request, AuditAction.CREATE, "Product", created.getId(), created, null, 201);
-    	System.out.println(auth.getName());
-    	System.out.println(request.getMethod());
+
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Product created successfully");
         body.put("product", created);

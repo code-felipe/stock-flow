@@ -1,5 +1,6 @@
 package com.stockflow.backend;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -9,12 +10,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
+import com.stockflow.backend.auditlog.service.IAuditLogService;
 import com.stockflow.backend.exception.CartEmptyException;
 import com.stockflow.backend.exception.DuplicateResourceException;
 import com.stockflow.backend.exception.OutOfStockException;
 import com.stockflow.backend.exception.ProductNotAvailableException;
 import com.stockflow.backend.exception.ResourceNotFoundException;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.Authentication;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +27,9 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	
+	@Autowired
+	private IAuditLogService auditService;
 	
 	@ExceptionHandler(ProductNotAvailableException.class)
 	public ResponseEntity<Map<String, Object>> handleProductNotAvailable(ProductNotAvailableException ex) {
@@ -33,15 +41,15 @@ public class GlobalExceptionHandler {
 	    ));
 	}
 	
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
-                "timestamp", Instant.now().toString(),
-                "status", 404,
-                "error", "Not Found",
-                "message", ex.getMessage()
-        ));
-    }
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+//                "timestamp", Instant.now().toString(),
+//                "status", 404,
+//                "error", "Not Found",
+//                "message", ex.getMessage()
+//        ));
+//    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleBadRequest(IllegalArgumentException ex) {
@@ -160,4 +168,22 @@ public class GlobalExceptionHandler {
             "message", ex.getMessage()
         ));
     }
+    
+    // Audit catch the error
+
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<Map<String, Object>> handleNotFound(
+	        ResourceNotFoundException ex,
+	        HttpServletRequest request,
+	        Authentication auth) {
+	
+	    auditService.saveFailedAudit(auth, request, 404, ex.getMessage());
+	
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+	            "timestamp", Instant.now().toString(),
+	            "status", 404,
+	            "error", "Not Found",
+	            "message", ex.getMessage()
+	    ));
+	}
 }

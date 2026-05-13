@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 
-import java.math.BigDecimal;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +29,6 @@ import com.stockflow.backend.product.dto.update.ProductUpdateRequestDTO;
 import com.stockflow.backend.product.dto.update.ProductUpdateResponseDTO;
 import com.stockflow.backend.product.repository.IProductRepository;
 import com.stockflow.backend.product.repository.specification.ProductSpecification;
-import com.stockflow.backend.product.spec.ProductSpecifications;
 import com.stockflow.backend.utils.mapper.Mapper;
 
 @Service
