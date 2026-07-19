@@ -29,6 +29,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = {"http://localhost:4200"})//connect to angular with all HTTP methods
 @RestController
 @RequestMapping("/api/admin/products")
 @Tag(name = "Products", description = "Endpoints for product catalog")
@@ -69,26 +71,33 @@ public class ProductRestController {
             @RequestParam(defaultValue = "0") int page,
 
             @Parameter(description = "Page size", example = "10")
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "20") int size
     ) {
     	
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         
         // Specification is now in use.
         Page<ProductSummaryDTO> result = productService.findProducts(filter, pageable);
-        
         Map<String, Object> body = new HashMap<>();
-        body.put("messsage", "All products were successfully fetched");
-        body.put("products", result);
         
-        if (search != null && !search.isBlank() && (filter.getName() == null || filter.getName().isBlank())) {
-            filter.setName(search);
+        if(!result.isEmpty()) {
+        	
+        	body.put("message", "All products were successfully fetched");
+            body.put("products", result);
+            
+            if (search != null && !search.isBlank() && (filter.getName() == null || filter.getName().isBlank())) {
+                filter.setName(search);
+            }
+            if(category != null && !category.isBlank() && (filter.getCategory() == null || filter.getCategory().isBlank())) {
+            	filter.setCategory(category);
+            }        
+        }else{
+        	body.put("message", "The product list is empty");
+            body.put("products", result);
         }
-        if(category != null && !category.isBlank() && (filter.getCategory() == null || filter.getCategory().isBlank())) {
-        	filter.setCategory(category);
-        }        
-
-        return ResponseEntity.ok(body);
+        
+        
+       return ResponseEntity.ok(body);
     }
     
     
@@ -123,10 +132,11 @@ public class ProductRestController {
     	ProductCreateResponseDTO created = productService.createProduct(dto);
     	
     	// Audit
-    	auditService.saveAudit(auth, request, AuditAction.CREATE, "Product", created.getId(), created, null, 201);
+    	// Commented for testing
+//    	auditService.saveAudit(auth, request, AuditAction.CREATE, "Product", created.getId(), created, null, 201);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "Product created successfully");
+        body.put("message", "Product " + created.getName() + " successfully created");
         body.put("product", created);
 
         return ResponseEntity
@@ -184,7 +194,7 @@ public class ProductRestController {
     	ProductUpdateResponseDTO updated = productService.updateProduct(id, dto);
     	
     	 Map<String, Object> body = new HashMap<>();
-         body.put("message", "Product have been updated successfully");
+         body.put("message", "Product " + updated.getName() + " have been updated successfully");
          body.put("product", updated);
          
          return ResponseEntity.ok().body(body);

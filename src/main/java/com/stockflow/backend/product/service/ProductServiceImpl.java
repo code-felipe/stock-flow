@@ -124,7 +124,7 @@ public class ProductServiceImpl implements IProductService{
 		// TODO Auto-generated method stub
 		Product product = repo.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
-		
+		// Needs to handle when is not active - update can not pass.
 		this.applyUpdates(product, p);
 		
 		return Mapper.toUpdateDTO(repo.save(product));
@@ -142,6 +142,10 @@ public class ProductServiceImpl implements IProductService{
 	    }
 	    if (dto.getPrice() != null) {
 	        product.setPrice(dto.getPrice());
+	    }
+	    
+	    if (hasText(dto.getSku())) {
+	        product.setSku(dto.getSku().trim());
 	    }
 	    
 	    if (hasText(dto.getImageUrl())) {

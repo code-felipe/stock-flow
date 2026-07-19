@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.stockflow.backend.product.domain.Product;
 
 public class ProductSpecification {
-	
+	//Needs change all lowerCase to upperCase for better practices.
 	private ProductSpecification() {}
 
     public static Specification<Product> nameContains(String name) {

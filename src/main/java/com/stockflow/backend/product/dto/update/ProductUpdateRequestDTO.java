@@ -38,6 +38,10 @@ public class ProductUpdateRequestDTO {
     @NotNull(message = "Price is required")
     @PositiveOrZero(message = "Price must be >= 0")
     private Double price;
+    
+    //Testing Sku on update 7-18-26
+    @Schema(description = "Product SKU - Unique", example = "Unique product identifier JWL-DUAL-020")
+	private String sku;
 
     @Schema(description = "Product image representation url", example = "https://example.com/images/gold-ring.jpg")
     @NotBlank(message = "Image is required")
