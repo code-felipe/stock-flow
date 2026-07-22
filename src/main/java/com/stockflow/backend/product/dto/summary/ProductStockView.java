@@ -13,6 +13,7 @@ public interface ProductStockView {
     String getProductSku();
     Integer getOnHand();
     Integer getReserved();
+    Integer getMinStock();
     Instant getCreatedAt();  // opcional
     Instant getUpdatedAt();  // opcional
 

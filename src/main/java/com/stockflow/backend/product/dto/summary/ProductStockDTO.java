@@ -57,7 +57,7 @@ public class ProductStockDTO {
 	    @Schema(description = "Enable - Disable for catalog", example = "false")
 	    private Boolean productIsActive;
 	    @Schema(description = "The time when the product was discontinued", example = "2026-01-31T14:16:36Z")
-	    private Date ProductDiscontinuedAt;
+	    private Date productDiscontinuedAt;
 	    
 	    @Schema(description = "Product creation date", example = "2026-01-31T14:16:36Z")
 	    private Date productCreatedAt;

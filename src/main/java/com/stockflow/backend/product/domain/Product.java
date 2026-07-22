@@ -42,7 +42,7 @@ public class Product {
 	private String description;
 	@Column(nullable = false)
 	private Double price;
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = false)
 	private String sku;
 	@Column(name = "image_url")
 	private String imageUrl;

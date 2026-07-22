@@ -49,6 +49,9 @@ public class InventorySummaryDTO {
 	@Min(0)
 	private Integer onHand;
 	
+	@Schema(description = "Minimal amount of stock", example = "3")
+    private Integer minStock;
+	
 	@Schema(description = "Inventory reserved", example = "192")
 	@Min(0)
 	private Integer reserved;

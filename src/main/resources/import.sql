@@ -6,13 +6,23 @@ INSERT INTO product_categories (product_id, category_id)VALUES((SELECT id FROM p
 
 INSERT INTO stores(name, description, address, created_at)VALUES('My Jewerly Store', 'Store dedicate for Jewerly products','2417 cooper chase ct', NOW());
 
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,1,10,20,'2026-01-27', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,2,20,10,'2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,3,30,10,'2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,4,40,10,'2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,5,50,10,'2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,6,60,10,'2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, created_at, updated_at) VALUES(1,7,70,10,'2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,1,3,0, 5, '2026-01-27', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,2,8,0, 10, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,3,0,0, 15, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,4,15,10, 20, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,5,50,10, 20, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,6,8,10, 50, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,7,70,10, 16, '2026-02-16', '2026-02-27');
+
+INSERT INTO orders (order_date, order_status, total, store_id) VALUES('2026-01-03 09:00:00','CONFIRMED', 11.50, 1);
+INSERT INTO orders (order_date, order_status, total, store_id) VALUES('2026-01-06 10:00:00','CONFIRMED', 29.00, 1);
+INSERT INTO orders (order_date, order_status, total, store_id) VALUES('2026-01-09 11:00:00','CONFIRMED', 48.00, 1);
+INSERT INTO orders (order_date, order_status, total, store_id) VALUES('2026-02-01 12:00:00','CANCELLED', 223, 1);
+
+INSERT INTO order_items (order_id, quantity, unit_price, store_id, product_id) VALUES(1,  1, 11.50, 1,1);
+INSERT INTO order_items (order_id, quantity, unit_price, store_id, product_id) VALUES(2,  2, 14.50, 1,2);
+INSERT INTO order_items (order_id, quantity, unit_price, store_id, product_id) VALUES(3,  3, 16.00, 1,3);
+INSERT INTO order_items (order_id, quantity, unit_price, store_id, product_id) VALUES(4,  4, 55.75, 1,4);
 
 INSERT INTO roles (authority) VALUES ('ROLE_USER');
 INSERT INTO roles (authority) VALUES ('ROLE_ADMIN');

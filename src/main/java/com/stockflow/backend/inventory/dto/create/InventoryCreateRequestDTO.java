@@ -1,7 +1,7 @@
 package com.stockflow.backend.inventory.dto.create;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 
 import lombok.AllArgsConstructor;
@@ -26,5 +26,8 @@ public class InventoryCreateRequestDTO {
 	@Schema(description = "Inventory stock on reserved for the specific product", example = "3")
 	@Min(0)
 	private Integer reserved;
+	
+	@Schema(description = "Minimal amount of stock", example = "3")
+    private Integer minStock;
 	
 }

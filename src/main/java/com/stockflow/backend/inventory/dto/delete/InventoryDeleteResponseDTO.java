@@ -26,4 +26,8 @@ public class InventoryDeleteResponseDTO {
 	
 	@Schema(description = "Inventory stock on reserved for the specific product", example = "3")
 	private Integer reserved;
+	
+	@Schema(description = "Minimal amount of stock", example = "3")
+    private Integer minStock;
+	
 }

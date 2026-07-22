@@ -48,9 +48,13 @@ public class ProductUpdateResponseDTO {
     
     @Schema(description = "Enable - Disable for catalog", example = "false")
     private Boolean active;
+    
+    @Schema(description = "The time when the product was created", example = "2026-01-31T14:16:36Z")
+    private Date createdAt;
+    
     @Schema(description = "The time when the product was discontinued", example = "2026-01-31T14:16:36Z")
     private Date discontinuedAt;
-    
+   
     @NotEmpty(message = "At least one category is required")
     private Set<Long> categoryIds;
 

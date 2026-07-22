@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class ProductCreateResponseDTO {
 
     @Schema(description = "Product name", example = "Gold Minimalist Ring")
     @NotBlank(message = "Name is required")
+    @Size(min = 4, max = 12)
     private String name;
 
     @Schema(description = "Product description", example = "18k gold plated minimalist ring with smooth finish")

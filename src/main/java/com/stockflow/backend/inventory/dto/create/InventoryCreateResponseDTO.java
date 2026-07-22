@@ -29,6 +29,10 @@ public class InventoryCreateResponseDTO {
 	
 	@Schema(description = "Inventory stock on reserved for the specific product", example = "3")
 	private Integer reserved;
+	
+	@Schema(description = "Minimal amount of stock", example = "3")
+    private Integer minStock;
+	
 
 	@Schema(description = "Inventory creation date", example = "2026-01-31T14:16:36Z")
     private Instant createdAt;

@@ -59,7 +59,7 @@ public class Mapper {
 				.productSku(product.getSku())
 				.productImageUrl(product.getImageUrl())
 				.productIsActive(product.getActive())
-				.ProductDiscontinuedAt(product.getDiscontinuedAt())
+				.productDiscontinuedAt(product.getDiscontinuedAt())
 				.onHand(inv != null ? inv.getOnHand() : 0)
 				.reserved(inv != null ? inv.getReserved() : 0)
 	            .productCreatedAt(product.getCreatedAt())
@@ -128,6 +128,7 @@ public class Mapper {
 				.sku(product.getSku())
 				.imageUrl(product.getImageUrl())
 				.active(product.getActive())
+				.createdAt(product.getCreatedAt())
 				.discontinuedAt(product.getDiscontinuedAt())
 				.build();
 	}
@@ -177,6 +178,7 @@ public class Mapper {
 	        .productSku(v.getProductSku())
 	        .onHand(v.getOnHand())
 	        .reserved(v.getReserved())
+	        .minStock(v.getMinStock())
 	        .createdAt(v.getCreatedAt())
 	        .updatedAt(v.getUpdatedAt())
 	        .build();
@@ -189,6 +191,7 @@ public class Mapper {
 				.storeId(inventory.getStore().getId())
 				.onHand(inventory.getOnHand())
 				.reserved(inventory.getReserved())
+				.minStock(inventory.getMinStock())
 				.createdAt(inventory.getCreatedAt())
 				.build();
 	}
@@ -199,6 +202,7 @@ public class Mapper {
 				.storeId(inventory.getStore().getId())
 				.onHand(inventory.getOnHand())
 				.reserved(inventory.getReserved())
+				.minStock(inventory.getMinStock())
 				.build();
 	}
 	
@@ -208,6 +212,7 @@ public class Mapper {
 				.storeId(inventory.getStore().getId())
 				.onHand(inventory.getOnHand())
 				.reserved(inventory.getReserved())
+				.minStock(inventory.getMinStock())
 				.build();
 	}
 	

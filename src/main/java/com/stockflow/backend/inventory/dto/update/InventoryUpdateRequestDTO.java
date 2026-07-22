@@ -23,4 +23,8 @@ public class InventoryUpdateRequestDTO {
 	@Schema(description = "Inventory stock on reserved for the specific product", example = "3")
 	@Min(0)
 	private Integer reserved;
+	
+	@Schema(description = "Minimal amount of stock", example = "3")
+    private Integer minStock;
+	
 }
