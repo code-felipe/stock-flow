@@ -12,6 +12,13 @@ Backend system for managing multi-store inventory, tracking stock lifecycle, and
 - Stock tracking and automatic updates
 - Role-based access control (RBAC) with JWT authentication
 - Dynamic filtering, sorting, and pagination
+- Sales & inventory analytics dashboard
+  - Monthly orders and revenue trends
+  - Total revenue and average order value
+  - Products sold metrics
+  - Inventory health indicator
+  - Low-stock alerts and restock recommendations
+  - Dynamic year-based reporting
 - RESTful API design
 - API documentation with Swagger
 
@@ -86,6 +93,7 @@ Flow:
 - [Order module details](docs/order-crud-module.md)
 - [Product Filter module details](docs/product-filter-module.md)
 - [Inventory Filter module details](docs/inventory-filter-module.md)
+- [Dashboard Analytics](docs/dashboard-analytics.md)
 - [Audit Log module](docs/audit-module.md)
 - [CartItem Session module details](docs/cart-module.md)
 - [Spring Security - JWT](docs/JWT-module.md)
