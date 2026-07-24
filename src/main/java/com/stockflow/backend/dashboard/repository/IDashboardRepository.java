@@ -61,9 +61,41 @@ public interface IDashboardRepository extends JpaRepository<Order, Long>, JpaSpe
 		        i.minStock
 		    )
 		    FROM Inventory i
-		    WHERE i.onHand <= i.minStock
+		    WHERE i.onHand < i.minStock
 		    ORDER BY i.onHand ASC
 		""")
 		List<LowStockProductDTO> findLowStockProducts(Pageable pageable);
+	
+	
+	@Query("""
+			SELECT SUM(o.total)
+			FROM Order o
+			WHERE orderStatus = 'CONFIRMED'
+			AND YEAR(orderDate) =:year
+			""")
+	Double totalRevenueByYear(@Param("year") int year);
+	
+	
+	@Query("""
+		    SELECT COUNT(i)
+		    FROM Inventory i
+		    WHERE i.onHand >= i.minStock
+		""")
+		Long healthyProducts();
+	
+	@Query("""
+		    SELECT COUNT(i)
+		    FROM Inventory i
+		""")
+		Long totalProducts();
+	
+	@Query("""
+			SELECT DISTINCT YEAR(o.orderDate)
+			FROM Order o
+			WHERE o.orderStatus = 'CONFIRMED'
+			ORDER BY YEAR(o.orderDate) DESC
+			""")
+	
+	List<Integer> findAvailableSalesYears();
 
 }

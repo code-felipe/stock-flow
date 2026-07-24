@@ -15,4 +15,11 @@ public interface IDashboardService {
 	public Long getProductsSold(int year, OrderStatus status);
 	
 	public List<LowStockProductDTO> getLowStockProducts();
+	
+	public Double totalRevenueByYear(int year);
+	
+	public Long healthyProducts();
+	
+	public List<Integer> findAvailableSalesYears();
+
 }

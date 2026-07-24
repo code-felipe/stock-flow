@@ -6,12 +6,12 @@ INSERT INTO product_categories (product_id, category_id)VALUES((SELECT id FROM p
 
 INSERT INTO stores(name, description, address, created_at)VALUES('My Jewerly Store', 'Store dedicate for Jewerly products','2417 cooper chase ct', NOW());
 
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,1,3,0, 5, '2026-01-27', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,2,8,0, 10, '2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,3,0,0, 15, '2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,4,15,10, 20, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,1,5,10, 5, '2026-01-27', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,2,10,10, 10, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,3,15,10, 15, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,4,10,10, 20, '2026-02-16', '2026-02-27');
 INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,5,50,10, 20, '2026-02-16', '2026-02-27');
-INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,6,8,10, 50, '2026-02-16', '2026-02-27');
+INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,6,45,10, 50, '2026-02-16', '2026-02-27');
 INSERT INTO inventories(store_id, product_id, on_hand, reserved, min_stock, created_at, updated_at) VALUES(1,7,70,10, 16, '2026-02-16', '2026-02-27');
 
 INSERT INTO orders (order_date, order_status, total, store_id) VALUES('2026-01-03 09:00:00','CONFIRMED', 11.50, 1);

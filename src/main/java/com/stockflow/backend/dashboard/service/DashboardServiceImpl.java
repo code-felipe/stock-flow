@@ -1,5 +1,6 @@
 package com.stockflow.backend.dashboard.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,29 @@ public class DashboardServiceImpl implements IDashboardService {
 		 return dashRepo.findLowStockProducts(
 			        PageRequest.of(0, 10)
 			    );
+	}
+
+	@Override
+	public Double totalRevenueByYear(int year) {
+		Double revenue = dashRepo.totalRevenueByYear(year);
+		
+		return revenue != null ? revenue : 0.0;
+	}
+
+	@Override
+	public Long healthyProducts() {
+		// TODO Auto-generated method stub
+		Double inventoryHealth = (dashRepo.healthyProducts() * 100.0) / dashRepo.totalProducts();
+		
+		return Math.round(inventoryHealth != null ? inventoryHealth : 0);
+	}
+
+	@Override
+	public List<Integer> findAvailableSalesYears() {
+		
+		List<Integer> availableYears = dashRepo.findAvailableSalesYears();
+		
+		return !availableYears.isEmpty() ? availableYears : new ArrayList<Integer>() ;
 	}
 
 }

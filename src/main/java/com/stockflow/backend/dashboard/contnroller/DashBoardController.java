@@ -89,4 +89,43 @@ public class DashBoardController {
 	        )
 	    );
 	}
+	
+	@GetMapping("/total-revenue")
+	public ResponseEntity<Map<String, Object>> getTotalRevenueByYear(
+	        @RequestParam(defaultValue = "2026") int year){
+
+		Double revenue = dashboardService.totalRevenueByYear(year);
+
+	    return ResponseEntity.ok(
+	        Map.of(
+	            "year", year,
+	            "revenue", revenue
+	        )
+	    );
+	}
+	
+	@GetMapping("/inventory-health")
+	public ResponseEntity<Map<String, Object>> getInventoryHealth(){
+
+		Long inventoryHealth = dashboardService.healthyProducts();
+
+	    return ResponseEntity.ok(
+	        Map.of(
+	            "inventoryHealth", inventoryHealth
+	        )
+	    );
+	}
+	
+	
+	@GetMapping("/available-sale-years")
+	public ResponseEntity<Map<String, Object>> getAvailableSaleYears(){
+
+		List<Integer> availableSaleYears = dashboardService.findAvailableSalesYears();
+
+	    return ResponseEntity.ok(
+	        Map.of(
+	            "availableSaleYears", availableSaleYears
+	        )
+	    );
+	}
 }
